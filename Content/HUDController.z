@@ -13,7 +13,7 @@ class HUDController : ZilchComponent
     var HudLevel : Level = null;
     
     [Property]
-    var DamageTimerValue : Real = 2;
+    var DamageTimerValue : Real = 4;
     var DamageTimerP1 : Real = 0.0;
     var DamageTimerP2 : Real = 0.0;
     
