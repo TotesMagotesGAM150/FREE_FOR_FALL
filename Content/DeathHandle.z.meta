@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "DeathHandle",
+		uint64 ResourceId = 549e217ebdc3c1fa,
+	},
+},

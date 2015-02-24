@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "Ratchet_idle_strip4",
+		uint64 ResourceId = 54ab1dab6e65e9ce,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 73,
+		uint FrameSizeY = 77,
+		uint FrameCount = 4,
+		float FrameDelay = 0.2,
+		float OriginX = 36,
+		float OriginY = 38,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

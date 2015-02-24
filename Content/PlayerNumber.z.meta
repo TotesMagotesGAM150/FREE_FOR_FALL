@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "PlayerNumber",
+		uint64 ResourceId = 5492df609b3af209,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"PowerupsBatch2",
+		],
+	},
+},

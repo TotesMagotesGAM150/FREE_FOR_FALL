@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "grom face",
+		uint64 ResourceId = 54ab09aeb3e419d7,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 52,
+		uint FrameSizeY = 52,
+		uint FrameCount = 1,
+		float FrameDelay = 0.0833333,
+		float OriginX = 26,
+		float OriginY = 26,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

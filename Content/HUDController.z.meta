@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "HUDController",
+		uint64 ResourceId = 546f4f86070dcbb8,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"StaminaAndPortraitTake1",
+		],
+	},
+},

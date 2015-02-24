@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "FireRingCollisionHandler",
+		uint64 ResourceId = 54cf9734499162ab,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"FixedCasting",
+		],
+	},
+},

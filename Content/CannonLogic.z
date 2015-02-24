@@ -1,0 +1,84 @@
+class CannonLogic : ZilchComponent
+{
+
+    var RotationAngle : Real = 0.3;
+    var Distance1 : Real = 0;
+    var Playernum11 : Cog = null; 
+
+    var P1: Cog = null;
+    var P2: Cog = null;
+    var Offset : Real3 = Real3(0.1, 0.0, 0.0);
+    
+    
+    //Debugging by drawing the rays
+    function DrawArrow(ray : Ray, distance : Real)
+    {
+        var end = ray.Start + ray.Direction * distance;
+
+        var line = new DebugLine();
+        line.Start(ray.Start).End(end).HeadSize(0.25).Float4Color(Real4(1,0,0,1)).OnTop(true);
+        line.Draw();
+    }
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.P1 = this.Space.FindObjectByName("Player1");
+        this.P2 = this.Space.FindObjectByName("Player2");
+    }
+
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        
+        var ray1 = Ray(); //Assigning rays to variables
+        ray1.Start = this.Owner.Transform.WorldTranslation;
+        ray1.Direction = this.Owner.Orientation.WorldForward + this.Offset;
+        ray1.Direction = Math.Normalize(ray1.Direction);
+        var result1 = this.Space.PhysicsSpace.CastRayFirst(ray1);
+        
+        this.Distance1 = result1.Distance;
+        this.Playernum11 = result1.ObjectHit;
+        
+        
+        //DEBUGGING 
+        this.DrawArrow(ray1, this.Distance1);
+        //Console.WriteLine("ray 1: `this.Distance1`"); 
+        //Console.WriteLine("ray 1: `this.Playernum11`");
+        
+        if(this.Playernum11 == this.P1 && this.Distance1 <=3.5 && this.P1.PowerupActiveHandler.ShieldActive == false)
+        {
+                this.P1.RigidBody.Velocity = this.Owner.Orientation.WorldForward * 4;
+                //The hit variable is set to true which doesnt allow player 2 to move 
+                this.P1.Knockback.Hit2 = true; 
+                //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+                this.P1.Knockback.Count2 = 6.0;
+                //To show the player got hit 
+                this.P1.Knockback.ColorChange2 = true;
+                
+                                /* Call the damage script */
+                this.Space.LevelSettings.HUDController.PlayerOneTakeDamage();
+        }   
+            
+        if(this.Playernum11 == this.P2 && this.Distance1 <=3.5 && this.P2.PowerupActiveHandler.ShieldActive == false)
+        {   
+ 
+                this.P2.RigidBody.Velocity = this.Owner.Orientation.WorldForward * 4;
+                //The hit variable is set to true which doesnt allow player 2 to move 
+                this.P2.Knockback.Hit = true; 
+                //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+                this.P2.Knockback.Count = 6.0;
+                //To show the player got hit 
+                this.P2.Knockback.ColorChange = true;
+                
+                                /* Call the damage script */
+                this.Space.LevelSettings.HUDController.PlayerTwoTakeDamage();
+        }
+            
+        
+        //Rotation
+        var rotationAngles = local Real3 (0.0, 0.0, 0.0);
+        rotationAngles.Z = Math.ToRadians(this.RotationAngle);
+       this.Owner.Transform.RotateAnglesWorld(rotationAngles); //allows for rotation
+    }
+}

@@ -1,0 +1,7 @@
+Fixed Deathhandle.z so that the player can't move while falling.
+(actually just added the condition inside the player movement script)
+
+Added collision areas to all the falling areas. Still needs testing to figure out if we need to move them.
+Also added them to the CPU play area. 
+
+Merged with v8.2

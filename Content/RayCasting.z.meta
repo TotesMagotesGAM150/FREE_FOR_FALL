@@ -1,0 +1,16 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "RayCasting",
+		uint64 ResourceId = 54a846583aa47c63,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"PowerupsBatch2",
+			"FixedCasting",
+		],
+	},
+},

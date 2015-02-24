@@ -1,0 +1,221 @@
+/*************************************************************************************************
+Author: Jonathan Owens
+
+Name: Knockback
+
+Description: Handles the knockback of the players
+
+Date: 1/9/15
+*************************************************************************************************/
+class Knockback : ZilchComponent
+{
+    var Player1 : Cog = null;
+    var Player2 : Cog = null;
+    var Hit : Boolean = false; 
+    var Count : Real = 7.0; 
+    var ColorChange : Boolean = false; 
+    var OriginalColor : Real4 = Real4(0.0,0.0,0.0,0.0); 
+    var ColorCount : Real = 7.0;
+    
+    
+    var ColorCount2 : Real = 7.0; 
+    var Hit2 : Boolean = false; 
+    var Count2 : Real = 7.0; 
+    var ColorChange2 : Boolean = false; 
+    
+    var KnockBackSetting : Integer = 0; 
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Player1 = this.Space.FindObjectByName("Player1");
+        this.Player2 = this.Space.FindObjectByName("Player2");
+        this.OriginalColor = this.Player2.Sprite.Color; 
+    }
+
+    // The arguments for this functions are 2 integers and it returns one
+    function Bounce(param1 : Integer, param2: Integer): Integer  
+    {
+        // the difference is going to be the strength of one character and the defense of the other
+        var difference = param1 - param2;
+        //if the difference is less than or equal to 0, return 3, the return value is going to be 
+        //passed as the multiplier for the distance the character will travel 
+        if(difference <= 0)
+        {
+            // 3 is a number thats experimental, but seems so far to be the optimal choice 
+            return 3;
+        }
+        else
+        {
+            return difference + 3;
+        }
+    }
+
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        
+        var player1ray1 = this.Player1.RayCasting.Distance1; //getting the distances from the raycasting script
+        var player1ray2 = this.Player1.RayCasting.Distance2;
+        var player1ray3 = this.Player1.RayCasting.Distance3;
+        
+        var player2ray1 = this.Player2.RayCasting.Distance1; //getting the distances from the raycasting script
+        var player2ray2 = this.Player2.RayCasting.Distance2;
+        var player2ray3 = this.Player2.RayCasting.Distance3;
+ 
+ 
+ 
+        if(player1ray1 <= 1 || player1ray2 <= 1 || player1ray2 <= 1) //if the distance is less than 0.5
+        {
+            /* 1 IS PLAYER VS PLAYER */
+            /* 2 IS PLAYER VS CPU */
+            if(this.Player1.PlayerAnimations.Attack == true && this.KnockBackSetting == 1 && 
+                this.Player2.BoxCollider.CollisionGroup == CollisionGroup.Find("Player2")) //and if the player is attacking
+            {
+                //Console.WriteLine("Test");
+                //Pass the return value of bounce as the amount to multiply the distance traveled 
+                this.Player2.RigidBody.Velocity = this.Player1.Orientation.WorldForward * this.Bounce(this.Player1.PlayerMovement.Strength, this.Player2.Player2Movement.Defense); //the player is knocked back in the direction the 
+                //The hit variable is set to true which doesnt allow player 2 to move 
+                this.Hit = true; 
+                //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+                this.Count = 6.0;
+                //To show the player got hit 
+                this.ColorChange = true;
+                //Play a sound for getting hit
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Hit"));
+                
+                /* Call the damage script */
+                this.Space.LevelSettings.HUDController.PlayerTwoTakeDamage();
+            }
+            if(this.Player1.PlayerAnimations.Attack == true && this.KnockBackSetting == 2 &&
+                this.Player2.BoxCollider.CollisionGroup == CollisionGroup.Find("Player2")) //and if the player is attacking
+            {
+                //Console.WriteLine("Test");
+                //Pass the return value of bounce as the amount to multiply the distance traveled 
+                this.Player2.RigidBody.Velocity = this.Player1.Orientation.WorldForward * this.Bounce(this.Player1.PlayerMovement.Strength, this.Player2.Cpu.Defense); //the player is knocked back in the direction the 
+                //The hit variable is set to true which doesnt allow player 2 to move 
+                this.Hit = true; 
+                //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+                this.Count = 6.0;
+                //To show the player got hit 
+                this.ColorChange = true;
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Hit"));
+                /* Call the damage script */
+                this.Space.LevelSettings.HUDController.PlayerTwoTakeDamage();
+            }
+            
+        }
+        
+        if(this.KnockBackSetting == 1)
+        {
+            if(player2ray1 <= 1 || player2ray2 <= 1 || player2ray2 <= 1) //if the distance is less than 0.5
+            {
+                if(this.Player2.Player2Animations.Attack == true && 
+                    this.Player1.BoxCollider.CollisionGroup == CollisionGroup.Find("Player1")) //and if the player is attacking
+                {
+                    //Console.WriteLine("Test2");
+                    //Pass the return value of bounce as the amount to multiply the distance traveled 
+                    this.Player1.RigidBody.Velocity = this.Player2.Orientation.WorldForward * this.Bounce(this.Player2.Player2Movement.Strength, this.Player1.PlayerMovement.Defense); //the player is knocked back in the direction the 
+                    //The hit variable is set to true which doesnt allow player 2 to move 
+                    this.Hit2 = true; 
+                    //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+                    this.Count2 = 6.0;
+                    //To show the player got hit 
+                    this.ColorChange2 = true;
+                    this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Hit"));
+                    /* Call the damage script */
+                    this.Space.LevelSettings.HUDController.PlayerOneTakeDamage();
+                }
+            }
+        }
+        
+        if(this.KnockBackSetting == 2 && this.Count2 == 7.0)
+        {
+            if(player2ray1 <= 1 || player2ray2 <= 1 || player2ray2 <= 1) //if the distance is less than 0.5
+            {
+                if(this.Player2.Cpu.Attack == true && 
+                    this.Player1.BoxCollider.CollisionGroup == CollisionGroup.Find("Player1")) //and if the player is attacking
+                {
+                    //Console.WriteLine("Test2");
+                    //Pass the return value of bounce as the amount to multiply the distance traveled 
+                    this.Player1.RigidBody.Velocity = this.Player2.Orientation.WorldForward * this.Bounce(this.Player2.Cpu.Strength, this.Player1.PlayerMovement.Defense); //the player is knocked back in the direction the 
+                    //The hit variable is set to true which doesnt allow player 2 to move 
+                    this.Hit2 = true; 
+                    //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+                    this.Count2 = 6.0;
+                    //To show the player got hit 
+                    this.ColorChange2 = true;
+                    this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Hit"));                    
+                    /* Call the damage script */
+                    this.Space.LevelSettings.HUDController.PlayerOneTakeDamage();
+                }
+            }
+        }
+        
+        //Console.WriteLine(this.Hit2);
+        //Console.WriteLine(this.Count2);
+        
+        //If the player is essentially hit and count is between 6 and 0 keep decrementing 
+        if(this.Count <= 6.0 || this.Count > 0.0 && this.Hit == true)
+        {
+            this.Count -= 0.2;
+        }
+        //When it finally hits 0, reset the count, allow player 2 to move now and stop velocity on player 2
+        if(this.Count <= 0.0)
+        {
+            this.Hit = false; 
+            this.Count = 7.0;
+            this.Player2.RigidBody.Velocity = Real3(0.0,0.0,0.0);
+        }
+        
+        //If the player is essentially hit and count is between 6 and 0 keep decrementing 
+        if(this.Count2 <= 6.0 || this.Count2 > 0.0 && this.Hit2 == true)
+        {
+            this.Count2 -= 0.2;
+        }
+        //When it finally hits 0, reset the count, allow player 2 to move now and stop velocity on player 2
+        if(this.Count2 <= 0.0)
+        {
+            this.Hit2 = false; 
+            this.Count2 = 7.0;
+            this.Player1.RigidBody.Velocity = Real3(0.0,0.0,0.0);
+        }
+    
+        
+        //When you get hit change your color to red for the same duration your being knocked back 
+        if(this.ColorChange == true)
+        {
+            this.Player2.Sprite.Color = Real4(1,0,0,1);
+            this.ColorCount == 6.0;
+        }
+        if(this.ColorCount <= 6.0 || this.ColorCount > 0.0)
+        {
+            this.ColorCount -= 0.2;
+        }
+        if(this.ColorCount <= 0.0)
+        {
+            this.ColorChange = false;
+            this.ColorCount = 7.0;
+            this.Player2.Sprite.Color = this.OriginalColor;
+        }
+        
+        //When you get hit change your color to red for the same duration your being knocked back 
+        if(this.ColorChange2 == true)
+        {
+            this.Player1.Sprite.Color = Real4(1,0,0,1);
+            this.ColorCount == 6.0;
+        }
+        if(this.ColorCount2 <= 6.0 || this.ColorCount2 > 0.0)
+        {
+            this.ColorCount2 -= 0.2;
+        }
+        if(this.ColorCount2 <= 0.0)
+        {
+            this.ColorChange2 = false;
+            this.ColorCount2 = 7.0;
+            this.Player1.Sprite.Color = this.OriginalColor;
+        }
+        
+    }
+}

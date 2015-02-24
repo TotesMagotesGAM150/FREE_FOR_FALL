@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "FinalizeCharSelectionCpu",
+		uint64 ResourceId = 54a841938aee3e33,
+	},
+},

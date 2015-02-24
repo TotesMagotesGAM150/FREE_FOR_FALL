@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "Default_text_sprite",
+		uint64 ResourceId = 54b78cf44ab8aaa1,
+	},
+},

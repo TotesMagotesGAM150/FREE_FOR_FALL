@@ -1,0 +1,38 @@
+/*************************************************************************************************
+Author: Jonathan Owens
+
+Name: PlayerSpawnLocation
+
+Description: Records the starting location of the players.
+
+Date: 1/26/15
+*************************************************************************************************/
+
+class PlayerSpawnLocation : ZilchComponent
+{
+    var Player1 : Cog = null;
+    var Player2 : Cog = null;
+    
+    var Player1Spawn : Real3 = Real3(0, 0, 0);
+    var Player2Spawn : Real3 = Real3(0, 0, 0);
+    
+    var Player1Rot : Quaternion = Quaternion(0, 0, 0, 0);
+    var Player2Rot : Quaternion = Quaternion(0, 0, 0, 0);
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Player1 = this.Space.FindObjectByName("Player1");
+        this.Player2 = this.Space.FindObjectByName("Player2");
+        
+        this.Player1Spawn = this.Player1.Transform.Translation;
+        this.Player2Spawn = this.Player2.Transform.Translation;
+        
+        this.Player1Rot = this.Player1.Transform.Rotation;
+        this.Player2Rot = this.Player2.Transform.Rotation;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

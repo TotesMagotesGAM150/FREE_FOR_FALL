@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "FinalizeCharSelection",
+		uint64 ResourceId = 54945b61b1b47990,
+	},
+},

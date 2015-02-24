@@ -1,0 +1,130 @@
+/*************************************************************************************************
+Author: Jonathan Owens
+
+Name: DeathHandle
+
+Description: Handles logic for falling off the edges of the map.
+
+Date: 1/26/15
+*************************************************************************************************/
+
+class DeathHandle : ZilchComponent
+{
+    var DeathCollision : Boolean = false; 
+    // Player 1 and 2 remaining deaths.
+    [Property]
+    var Deaths : Integer = 3;
+    
+    // Cogs for sprite text on hud level
+    var P1Lives : Cog = null;
+    var P2Lives : Cog = null;
+    
+    // Cogs for players
+    var Player1: Cog = null;
+    var Player2: Cog = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+
+        // Reerence to the text objects on the HUD
+        this.P1Lives = this.LevelSettings.HUDCreator.HudSpace.FindObjectByName("P1Lives");
+        this.P2Lives = this.LevelSettings.HUDCreator.HudSpace.FindObjectByName("P2Lives");
+
+        // Setting the players to Cog variables 
+        this.Player1 = this.Space.FindObjectByName("Player1");
+        this.Player2 = this.Space.FindObjectByName("Player2");
+    }
+
+   
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        //Console.WriteLine(this.DeathCollision);
+        // Setting the HUD text to display the remaining deaths for each character
+        this.P1Lives.SpriteText.Text = "`this.Player1.DeathHandle.Deaths`";
+        this.P2Lives.SpriteText.Text = "`this.Player2.DeathHandle.Deaths`";
+        
+        // If falling off the edge
+        if (this.DeathCollision == true)
+        {
+
+            // Shrink the player
+            this.Owner.Transform.Scale -= Real3(0.05, 0.05, 0.05);            
+            
+            // Once they are very small
+            if(this.Owner.Transform.Scale.X < 0.05)
+            {
+                                // 
+                this.Owner.PowerupActiveHandler.DeactivateAll();
+                // Set falling back to false 
+                this.DeathCollision = false;
+                // Put them back to normal size and decrement the death counter 
+                this.Owner.Transform.Scale = Real3(2, 2, 1);
+                // Decrement deaths
+                this.Deaths -= 1;
+                
+                
+                // Logic for respawning the players and calling game over when lives run out                 
+                if(this.Owner.Name == "Player1")
+                {
+                    this.Space.FindObjectByName("Player2").PowerupActiveHandler.ConfusionActive = false;
+                    
+                    if(this.Deaths <= 0)
+                    {
+                        this.Space.FindObjectByName("P1Stats").P1STATS.Dead = 1;
+                        
+                        this.LevelSettings.GameOver.GameOver("Death");
+                    }
+                    
+                    this.Space.LevelSettings.HUDController.P1_Stamina = 3;
+                    this.Space.LevelSettings.HUDController.P1_Stunned = false;
+                    
+                    this.Owner.Transform.Translation = this.LevelSettings.PlayerSpawnLocation.Player1Spawn;
+                    this.Player2.Transform.Translation = this.LevelSettings.PlayerSpawnLocation.Player2Spawn;
+                    
+                    this.Owner.Transform.Rotation = this.LevelSettings.PlayerSpawnLocation.Player1Rot;
+                    this.Player2.Transform.Rotation = this.LevelSettings.PlayerSpawnLocation.Player2Rot;
+                }
+                
+                if(this.Owner.Name == "Player2")
+                {
+                    this.Space.FindObjectByName("Player1").PowerupActiveHandler.ConfusionActive = false;
+                    
+                    if(this.Deaths <= 0)
+                    {
+                        this.Space.FindObjectByName("P2Stats").P2STATS.Dead = 1;
+                        
+                        this.LevelSettings.GameOver.GameOver("Death");
+                    }
+                    
+                    this.Space.LevelSettings.HUDController.P2_Stamina = 3;
+                    this.Space.LevelSettings.HUDController.P2_Stunned = false;
+                    
+                    this.Owner.Transform.Translation = this.LevelSettings.PlayerSpawnLocation.Player2Spawn;
+                    this.Player1.Transform.Translation = this.LevelSettings.PlayerSpawnLocation.Player1Spawn;
+                    
+                    this.Owner.Transform.Rotation = this.LevelSettings.PlayerSpawnLocation.Player2Rot;
+                    this.Player1.Transform.Rotation = this.LevelSettings.PlayerSpawnLocation.Player1Rot;
+                }
+            }
+            
+        }
+        
+    }
+    
+    // If you enter an area that causes you to fall, set death to true 
+    function OnCollisionStarted(event: CollisionEvent)
+    {
+        var deathObject = event.OtherObject;
+        
+        if(deathObject.Name == "DeathBox")
+        {
+            this.DeathCollision = true;
+        }
+        
+        this.Owner.RigidBody.Velocity = Real3(0,0,0);
+        
+    }
+}

@@ -1,0 +1,180 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: IsSelected.z 
+
+Description: Checks to see which player is being selected by referencing a unique key. I need to add 
+             to this script. Not finished yet. 
+
+Date: 12/11/14
+*************************************************************************************************/
+class IsSelected : ZilchComponent
+{
+    // the key represents the unique identifier for the selected character //
+    [Property]
+    var Key : Integer = Integer(); 
+    [Property]
+    var Key2 : Integer = Integer();
+    
+    //The name image of the current portrait/character
+    [Property]
+    var Name : SpriteSource = null; 
+    
+    //The Stats image of the current portrait/character
+    [Property]
+    var StatsText : SpriteSource = null; 
+    
+    //the attributes that correspond to each character 
+    [Property]
+    var Health : Integer = Integer();
+    [Property]
+    var Speed : Real = 0.0;
+    [Property]
+    var Defense : Integer = Integer();
+    [Property]
+    var Strength : Integer = Integer();
+    
+    // sprite sources for each individual character to be loaded in either player 1 or 2
+    /* Portrait */
+    [Property]
+    var PlayerPortrait : SpriteSource = null;
+    /* Idle */
+    [Property]
+    var PlayerStand : SpriteSource = null;
+    /* Walking */
+    [Property]
+    var PlayerWalk : SpriteSource = null;
+    /* Attacking */
+    [Property]
+    var PlayerAttack : SpriteSource = null; 
+    
+    var P1 : Cog = null; 
+    var P2 : Cog = null;
+    var Stats1 : Cog = null; 
+    var Stats2 : Cog = null;
+    var Avatar1 : Cog = null; 
+    var Avatar2 : Cog = null;
+    var Name1 : Cog = null; 
+    var Name2 : Cog = null;
+    
+    // testing color changes for character select, temporary 
+    var Color : Real4 = local Real4();
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, "CharacterSelectedEvent", this.OnCharacterSelectedEvent);
+        Zero.Connect(this.Space, "CharacterSelectedEvent2", this.OnCharacterSelectedEvent2);
+        this.Color = this.Owner.Sprite.Color; 
+        this.P1 =  this.Space.FindObjectByName("P1Stats");
+        this.P2 = this.Space.FindObjectByName("P2Stats");
+        this.Stats1 = this.Space.FindObjectByName("Stats text"); 
+        this.Stats2 = this.Space.FindObjectByName("Stats text2"); 
+        this.Avatar1 = this.Space.FindObjectByName("Avatar1");
+        this.Avatar2 = this.Space.FindObjectByName("Avatar2");
+        this.Name1 = this.Space.FindObjectByName("Player1Name");
+        this.Name2 = this.Space.FindObjectByName("Player2Name");
+    }    
+    
+    
+    function ChangeColor() 
+    {
+        if(this.Space.LevelSettings.CharacterPicker.Selection != this.Space.LevelSettings.CharacterPicker2.Selection)
+        {
+            this.Owner.Sprite.Color -= Real4(0.0,0.0,0.0,0.5); 
+        }
+    }
+
+    function RevertColor()
+    {
+        if(this.Key != this.Space.LevelSettings.CharacterPicker.Selection && this.Key != this.Space.LevelSettings.CharacterPicker2.Selection)
+        {
+            this.Owner.Sprite.Color = this.Color; 
+        }
+    }
+    
+
+    function OnCharacterSelectedEvent(event : CharacterSelectedEvent)
+    {
+        if(this.Key == this.Space.LevelSettings.CharacterPicker.Selection)
+        {
+            this.ChangeColor();
+            
+            // Update the stats displayed for each character 
+            this.Stats1.Sprite.SpriteSource = this.Owner.IsSelected.StatsText;
+            this.Avatar1.Sprite.SpriteSource = this.Owner.IsSelected.PlayerStand;
+            this.Name1.Sprite.SpriteSource = this.Owner.IsSelected.Name;
+            this.Name1.Sprite.Visible = true; 
+
+            // Assign all the values in the Characters icon to that of P1STATS
+            this.P1.P1STATS.Health = this.Health; 
+            this.P1.P1STATS.Speed = this.Speed; 
+            this.P1.P1STATS.Strength = this.Strength;
+            this.P1.P1STATS.Defense = this.Defense; 
+            
+            // Assign all the animation values in the Characters icon to that of P1Stats 
+            this.P1.P1STATS.PlayerStand = this.PlayerStand;
+            this.P1.P1STATS.PlayerWalk = this.PlayerWalk;
+            this.P1.P1STATS.PlayerAttack = this.PlayerAttack;
+            this.P1.P1STATS.PlayerPortrait = this.PlayerPortrait;
+
+        } 
+        
+        if(this.Space.LevelSettings.CharacterPicker.Selection == 0)
+        {
+            this.Stats1.Sprite.SpriteSource = this.Stats1.Default_text_sprite.Defaulttext;
+            this.Avatar1.Sprite.SpriteSource = this.Avatar1.Avatar.Avatar_Player;
+            this.Name1.Sprite.Visible = false; 
+            this.RevertColor();
+        }
+        
+        else
+        {
+            this.RevertColor();
+        }
+    
+    }
+    
+    function OnCharacterSelectedEvent2(event : CharacterSelectedEvent2)
+    {
+        if(this.Key2 == this.Space.LevelSettings.CharacterPicker2.Selection)
+        {
+            this.ChangeColor();
+            
+            // Update the stats displayed for each character 
+            this.Stats2.Sprite.SpriteSource = this.Owner.IsSelected.StatsText;
+            this.Avatar2.Sprite.SpriteSource = this.Owner.IsSelected.PlayerStand;
+            this.Name2.Sprite.SpriteSource = this.Owner.IsSelected.Name;
+            this.Name2.Sprite.Visible = true; 
+            
+            // Assign all the values in the Characters icon to that of P1STATS
+            this.P2.P2STATS.Health = this.Health; 
+            this.P2.P2STATS.Speed = this.Speed; 
+            this.P2.P2STATS.Strength = this.Strength;
+            this.P2.P2STATS.Defense = this.Defense; 
+            
+            // Assign all the animation values in the Characters icon to that of P1Stats 
+            this.P2.P2STATS.PlayerStand = this.PlayerStand;
+            this.P2.P2STATS.PlayerWalk = this.PlayerWalk;
+            this.P2.P2STATS.PlayerAttack = this.PlayerAttack;
+            this.P2.P2STATS.PlayerPortrait = this.PlayerPortrait;
+
+        }
+        
+        if(this.Space.LevelSettings.CharacterPicker2.Selection == 0)
+        {
+            this.Stats2.Sprite.SpriteSource = this.Stats2.Default_text_sprite.Defaulttext;
+            this.Avatar2.Sprite.SpriteSource = this.Avatar2.Avatar.Avatar_Player;
+            this.Name2.Sprite.Visible = false; 
+
+            this.RevertColor();
+        }
+        
+        else
+        {
+            this.RevertColor();
+        }
+
+    }
+    
+}

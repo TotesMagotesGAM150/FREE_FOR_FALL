@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "IsSelectedCpu",
+		uint64 ResourceId = 54a84a6051eeaa30,
+	},
+},

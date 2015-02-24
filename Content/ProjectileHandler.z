@@ -1,0 +1,75 @@
+class ProjectileHandler : ZilchComponent
+{
+    var P1: Cog = null;
+    var P2: Cog = null;
+    
+    [Property]
+    var TimerValue : Real = 7;
+    var Timer : Real = 0;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        this.P1 = this.Space.FindObjectByName("Player1");
+        this.P2 = this.Space.FindObjectByName("Player2");
+        
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        
+        if (this.Owner.Name == "P1Projectile")
+        {
+            this.Owner.RigidBody.Velocity = this.P1.Orientation.WorldForward * 10;
+        }
+        if (this.Owner.Name == "P2Projectile")
+        {
+            this.Owner.RigidBody.Velocity = this.P2.Orientation.WorldForward * 10;
+        }
+        
+        this.Timer += this.TimerValue;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if (this.Timer > 0)
+        {
+            this.Timer -= 0.1;
+        }
+        
+        if(this.Timer <= 0)
+        {
+            this.Owner.Destroy();
+        }
+    }
+    
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        
+        if (otherObject == this.P1 && this.P1.PowerupActiveHandler.ShieldActive == false && this.Owner.Name == "P2Projectile")
+        {
+            this.P1.Knockback.Hit2 = true; 
+            //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+            this.P1.Knockback.Count2 = 6.0;
+            //To show the player got hit 
+            this.P1.Knockback.ColorChange2 = true;
+            
+                /* Call the damage script */
+            this.Space.LevelSettings.HUDController.PlayerOneTakeDamage();
+            
+            this.Owner.Destroy();
+        }
+        else if (otherObject == this.P2 && this.P2.PowerupActiveHandler.ShieldActive == false && this.Owner.Name == "P1Projectile")
+        {
+            this.P2.Knockback.Hit2 = true; 
+            //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+            this.P2.Knockback.Count2 = 6.0;
+            //To show the player got hit 
+            this.P2.Knockback.ColorChange = true;
+            
+                /* Call the damage script */
+            this.Space.LevelSettings.HUDController.PlayerTwoTakeDamage();
+            
+            this.Owner.Destroy();
+        }
+    }
+}

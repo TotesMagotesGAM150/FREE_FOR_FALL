@@ -1,0 +1,16 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "PowerupActiveHandler",
+		uint64 ResourceId = 5461a5f0c069e3e8,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"Powerups",
+			"PowerupsBatch2",
+		],
+	},
+},

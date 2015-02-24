@@ -1,0 +1,17 @@
+class Avatar : ZilchComponent
+{
+    
+      
+    [Property]
+    var Avatar_Player : SpriteSource = null;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

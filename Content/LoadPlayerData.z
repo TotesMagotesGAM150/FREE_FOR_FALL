@@ -1,0 +1,50 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: LoadPlayerData.z 
+
+Description: Transfers the player 1 and player 2 data from P1 Stats & P2STATS to their respective 
+             objects 
+
+Date: 01/10/2015
+*************************************************************************************************/
+class LoadPlayerData : ZilchComponent
+{
+    
+    var Player1 : Cog = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        this.Player1 = this.Space.FindObjectByName("Player1");
+        this.Player1.Knockback.KnockBackSetting = 1;
+        // find player 1 and 2
+        var player1 = this.Space.FindObjectByName("Player1");
+        var player2 = this.Space.FindObjectByName("Player2");
+
+        // find stat objects holding player 1 and 2 data
+        var p1stats = this.Space.FindObjectByName("P1Stats");
+        var p2stats = this.Space.FindObjectByName("P2Stats");
+        
+        // LOAD IN STATS FOR PLAYER 1
+        player1.PlayerMovement.Health = p1stats.P1STATS.Health; 
+        player1.PlayerMovement.Speed = p1stats.P1STATS.Speed;
+        player1.PlayerMovement.Strength = p1stats.P1STATS.Strength;
+        player1.PlayerMovement.Defense = p1stats.P1STATS.Defense; 
+        
+        //LOAD IN ANIMATIONS FOR PLAYER 1
+        player1.PlayerAnimations.PlayerStand = p1stats.P1STATS.PlayerStand;
+        player1.PlayerAnimations.PlayerWalk = p1stats.P1STATS.PlayerWalk;
+        player1.PlayerAnimations.PlayerAttack = p1stats.P1STATS.PlayerAttack;
+        
+        // LOAD IN STATS FOR PLAYER 2
+        player2.Player2Movement.Health = p2stats.P2STATS.Health; 
+        player2.Player2Movement.Speed = p2stats.P2STATS.Speed; 
+        player2.Player2Movement.Strength = p2stats.P2STATS.Strength;
+        player2.Player2Movement.Defense = p2stats.P2STATS.Defense; 
+        
+        // LOAD IN ANIMATIONS FOR PLAYER 2        
+        player2.Player2Animations.PlayerStand = p2stats.P2STATS.PlayerStand;
+        player2.Player2Animations.PlayerWalk = p2stats.P2STATS.PlayerWalk;
+        player2.Player2Animations.PlayerAttack = p2stats.P2STATS.PlayerAttack;
+    }
+}

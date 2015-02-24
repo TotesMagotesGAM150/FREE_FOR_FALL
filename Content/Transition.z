@@ -1,0 +1,20 @@
+class Transition : ZilchComponent
+{
+    [Property]
+    var ColorTime : Real = 1.0;
+        
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.ColorTime -= 0.02;
+        this.Owner.Sprite.Color = this.Owner.Sprite.Color - Real4(0.0, 0.0, 0.0, 0.02);
+        if(this.ColorTime <= 0.0)
+        {
+           this.Owner.Destroy();
+        }
+    }
+}

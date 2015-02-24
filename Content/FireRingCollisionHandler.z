@@ -1,0 +1,74 @@
+class FireRingCollisionHandler : ZilchComponent
+{
+    var P1: Cog = null;
+    var P2: Cog = null;
+    
+    var DistanceFromP1: Real = 0.0;
+    var P1Direction: Real3 = Real3();
+    
+    var DistanceFromP2: Real = 0.0;
+    var P2Direction: Real3 = Real3();
+    
+    [Property]
+    var HitDistance : Real = 2.0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        
+        this.P1 = this.Space.FindObjectByName("Player1");
+        this.P2 = this.Space.FindObjectByName("Player2");
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // Get direction toward target
+        this.P1Direction = this.P1.Transform.Translation - this.Owner.Transform.Translation;
+        // Extract distance by finding magnitude
+        this.DistanceFromP1 = Math.Length(this.P1Direction);
+        // Extract direction by normalizing
+        this.P1Direction = Math.Normalize(this.P1Direction);
+        
+        // Get direction toward target
+        this.P2Direction = this.P2.Transform.Translation - this.Owner.Transform.Translation;
+        // Extract distance by finding magnitude
+        this.DistanceFromP2 = Math.Length(this.P2Direction);
+        // Extract direction by normalizing
+        this.P2Direction = Math.Normalize(this.P2Direction);
+
+
+        if (this.Owner.Name == "Player1" && this.Owner.PowerupActiveHandler.FireRingActive == true 
+            && this.DistanceFromP2 <= this.HitDistance && this.P2.PowerupActiveHandler.ShieldActive == false)
+        {
+            this.P2.RigidBody.Velocity = this.P2Direction * 8;
+            //The hit variable is set to true which doesnt allow player 2 to move 
+            this.P2.Knockback.Hit2 = true; 
+            //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+            this.P2.Knockback.Count2 = 6.0;
+            //To show the player got hit 
+            this.P2.Knockback.ColorChange = true;
+            
+                /* Call the damage script */
+            this.Space.LevelSettings.HUDController.PlayerTwoTakeDamage();
+        }
+        else if (this.Owner.Name == "Player2" && this.Owner.PowerupActiveHandler.FireRingActive == true 
+                 && this.DistanceFromP1 <= this.HitDistance && this.P1.PowerupActiveHandler.ShieldActive == false)
+        {
+            this.P1.RigidBody.Velocity = this.P1Direction * 8;
+            //The hit variable is set to true which doesnt allow player 2 to move
+            this.P1.Knockback.Hit2 = true; 
+            //Count is arbitrary, it gets decremented because so the next if statement can kick in 
+            this.P1.Knockback.Count2 = 6.0;
+            //To show the player got hit 
+            this.P1.Knockback.ColorChange2 = true;
+            
+                /* Call the damage script */
+            this.Space.LevelSettings.HUDController.PlayerOneTakeDamage();
+        }
+    }
+    
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+    }
+}

@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "CannonLogic",
+		uint64 ResourceId = 54dd762c7225ee73,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"FixedCasting",
+		],
+	},
+},

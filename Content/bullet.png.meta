@@ -1,0 +1,27 @@
+ImageContent = 
+{
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"PowerupsBatch2",
+		],
+	},
+	SpriteSourceBuilder = 
+	{
+		string Name = "bullet",
+		uint64 ResourceId = 54dc433b994e5597,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 6,
+		uint FrameSizeY = 6,
+		uint FrameCount = 1,
+		float FrameDelay = 0.0833333,
+		float OriginX = 3,
+		float OriginY = 3,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "IsSelected",
+		uint64 ResourceId = 5492bf39514050bb,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"portraitscript",
+		],
+	},
+},

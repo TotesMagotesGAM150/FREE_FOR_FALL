@@ -1,0 +1,27 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: FinalizeCharSelection.z
+
+Description: Checks to see if both characters are selected and advances to the PlayArea 
+
+Date: 01/02/2015
+*************************************************************************************************/
+class FinalizeCharSelection : ZilchComponent
+{
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Space.LevelSettings.CharacterPicker.CharacterSelected == true && this.Space.LevelSettings.CharacterPicker2.CharacterSelected2 == true)
+        {
+            if(Zero.Keyboard.KeyIsPressed(Keys.Space))
+            {
+                this.Space.LoadLevel(Level.Find("PlayArea"));
+            }
+        }
+    }
+}

@@ -1,0 +1,144 @@
+/*************************************************************************************************
+Author: Alexander Townsend
+
+Name: Cpu
+
+Description: The script to control the cpu.
+
+Date: Updated 1/30/15
+*************************************************************************************************/
+
+class Cpu : ZilchComponent
+{
+    var Dir: Real3 = Real3();         //The direction towards the player
+    var StopDistance: Real = 0.75;    //How close AI gets to the player before stopping
+    
+    
+    var Attack: Boolean = false; //is the cpu attacking 
+    
+       //the attributes that correspond to each character 
+    [Property]
+    var Health : Integer = Integer();
+    [Property]
+    var Speed : Real = 0.0;
+    [Property]
+    var Defense : Integer = Integer();
+    [Property]
+    var Strength : Integer = Integer();
+    
+    /* Idle */
+    [Property]
+    var PlayerStand : SpriteSource = null;
+    /* Walking */
+    [Property]
+    var PlayerWalk : SpriteSource = null;
+    /* Attacking */
+    [Property]
+    var PlayerAttack : SpriteSource = null; 
+    
+    //Player 1
+    var Player1 : Cog = null;
+    
+    var RandomGenerator : Random = Random();
+    var Wait : Boolean = false;
+    var WaitTime : Real = 2.0;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, "TimeUp", this.OnTimeUp);
+        this.Player1 = this.Space.FindObjectByName("Player1"); // Find Player 1
+    }
+    
+    //Function to see if AI is close enough to stop moving
+    function TooClose() : Boolean
+    {
+        if(Math.Length(this.Dir) > this.StopDistance)
+        {
+            this.Dir = Math.Normalize(this.Dir);
+            return false;
+        }
+        
+        this.Dir = Math.Normalize(this.Dir);
+        return true;
+    }
+    
+    function OnTimeUp(event : TimeUp)
+    {
+        this.Wait = false;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    { 
+        if(this.Player1.Knockback.Hit && this.Owner.Sprite.SpriteSource == this.PlayerWalk)
+        {
+            if(this.Owner.Sprite.SpriteSource != this.PlayerStand)
+            {
+                this.Owner.Sprite.SpriteSource = this.PlayerStand;
+            }
+        }
+        if(this.Player1.Knockback.Hit && this.Owner.Sprite.SpriteSource == this.PlayerAttack)
+        {
+            if(this.Owner.Sprite.SpriteSource != this.PlayerStand)
+            {
+                this.Owner.Sprite.SpriteSource = this.PlayerStand;
+                this.Attack = false;
+            }
+        }
+        
+        
+        var upVector = local Real3(0, 0, 1); //Used to rotate
+        var movement = local Real3(0.0, 0.0, 0.0);
+    
+        this.Dir = this.Player1.Transform.Translation - this.Owner.Transform.Translation;
+    
+        if(!this.Player1.Knockback.Hit)
+        {
+            if(!this.Attack && !this.Wait)
+            {
+                //Keep moving if AI is not too close
+                if (!this.TooClose() && !this.Space.LevelSettings.HUDController.P2_Stunned && !this.Owner.DeathHandle.DeathCollision)
+                {
+                    movement += this.Owner.Orientation.WorldForward * this.Speed;
+                    this.Owner.Transform.Translation += movement;
+                    
+                    if (this.Owner.Sprite.SpriteSource != this.PlayerWalk)
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerWalk;
+                    }
+                }
+                else if (!this.Space.LevelSettings.HUDController.P2_Stunned)
+                {
+                    this.Attack = true; 
+                }
+            }
+        
+            /* if attack is true set the animation to attacking */
+            if(this.Attack)
+            {
+                if(this.Owner.Sprite.SpriteSource != this.PlayerAttack)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerAttack;
+                }   
+                /* when we hit the last frame of the animation set attack to false */
+                if(this.Owner.Sprite.CurrentFrame == 3)
+                {
+                    this.Attack = false;
+                    this.Wait = true;
+                    this.Owner.Timer.StartTimer(this.WaitTime);
+                    
+                    if(this.Owner.Sprite.SpriteSource != this.PlayerStand)
+                    {
+                        this.Owner.Sprite.SpriteSource = this.PlayerStand;
+                    }
+                }
+            }
+            
+            if (!this.Space.LevelSettings.HUDController.P2_Stunned)
+            {
+                this.Owner.Orientation.LookAtDirectionWithUp(this.Dir, upVector); //Used to rotate
+            }
+        }
+    }
+}

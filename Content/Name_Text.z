@@ -1,0 +1,17 @@
+class Name_Text : ZilchComponent
+{
+    
+       
+    [Property]
+    var SpriteName : SpriteSource = null;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

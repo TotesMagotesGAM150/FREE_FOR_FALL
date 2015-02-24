@@ -1,0 +1,34 @@
+class ShroomCollision : ZilchComponent
+{
+    var Player1 : Cog = null;
+    var Player2 : Cog = null;
+    var Timer : Integer = 5;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        this.Player1 = this.Space.FindObjectByName("Player1");
+        this.Player2 = this.Space.FindObjectByName("Player2");        
+    }
+
+    function OnCollisionStarted (event: CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        
+        if(otherObject.Name == "Player1")
+        {
+            this.LevelSettings.HUDController.P1_Stunned = true;
+            Console.WriteLine("Collided");
+            this.LevelSettings.Timer.StartTimer(this.Timer);
+
+        }
+    
+    }
+    
+    function OnLogicUpdate(event: UpdateEvent)
+    {
+     
+    }
+    
+}

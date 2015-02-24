@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "Knockback",
+		uint64 ResourceId = 54a846583aa41810,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"PowerupsBatch2",
+		],
+	},
+},

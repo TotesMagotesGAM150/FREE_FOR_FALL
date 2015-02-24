@@ -1,0 +1,17 @@
+To tweak the fire ring, change the following values on
+Fire and Fire2 under the Player and Player2 parents:
+
+Cosmetics
+---------
+
+1) Set SphericalParticleEmitter to Active to see effects
+
+2) Alter Emitter Size to desired amount
+
+Mechanically
+------------
+
+On FireRingCollisionHandler on the Player1 and Player2 objects:
+
+1) Change HitDistance variable to desired amount. 
+   This is typically slightly lower than the number set for Emitter Size

@@ -1,0 +1,39 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: MenuScreen.z 
+
+Description: Handles the main menu text animations 
+
+Date: 01/12/2015
+*************************************************************************************************/
+class Menu_Keys : ZilchComponent
+{
+    [Property]
+    var Key : Integer = 0;
+    
+    [Property]
+    var Default : SpriteSource = null; 
+    [Property]
+    var Selected : SpriteSource = null; 
+    
+    var Title : Cog = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Title = this.Space.FindObjectByName("TitleScreen"); 
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Key == this.Title.MenuScreen.Selected)
+        {
+            this.Owner.Sprite.SpriteSource = this.Selected;
+        }
+        else
+        {
+            this.Owner.Sprite.SpriteSource = this.Default; 
+        }
+    }
+}

@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "Avatar",
+		uint64 ResourceId = 54b7b7f95f9d5c5f,
+	},
+},

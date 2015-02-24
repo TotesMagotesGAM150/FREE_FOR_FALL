@@ -1,0 +1,67 @@
+/*************************************************************************************************
+Author: Jonathan Owens
+
+Name: CameraLogic
+
+Description: Handles the camera with two players present
+
+Date: 12/7/14
+*************************************************************************************************/
+
+class CameraLogic : ZilchComponent
+{
+    
+    var MidPointX : Real = 0; //The midpoint of the X value
+    var MidPointY : Real = 0; //The midpoint of the Y value
+    var Distance : Real = 0;  //Distance between the two players
+    
+    [Property]
+    var Player1 : CogPath = null; //Player 1
+    [Property]
+    var Player2 : CogPath = null; //Player 2
+    
+    var ZDistance : Real = 40; //Z Distance of camera, remains the same
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+       var player2x = this.Player2.Cog.Transform.Translation.X; //Player 2 x position
+       
+       var player1x = this.Player1.Cog.Transform.Translation.X; //Player 1 x position
+       
+       var player2y = this.Player2.Cog.Transform.Translation.Y; //Player 2 y position
+       
+       var player1y = this.Player1.Cog.Transform.Translation.Y; //Player 1 y position
+       
+        
+        
+       //Calculates the midpoint of player 1 and player 2 using midpoint formula 
+       this.MidPointX = ((player1x + player2x) / 2);
+       this.MidPointY = ((player1y + player2y) / 2);
+       
+       //Calculates the distance of player 1 and player 2 using distance formula
+       this.Distance = Math.Sqrt(Math.Abs(((player2x  - player1x) * (player2x - player1x)) + ((player2y - player1y) * (player2y - player1y))));
+     
+       // Camera size is relative to distance of players until it gets to 3 and stops
+       if(this.Distance >= 5)
+       {
+       this.Owner.Camera.Size = this.Distance + 4; //Camera size is same as distance + 1
+        }
+        
+        if(this.Owner.Camera.Size >= 20)
+        {
+            this.Owner.Camera.Size = 20;
+        }
+          
+    //   Console.WriteLine("Distance : `this.Distance`");
+     //  Console.WriteLine("Camera Size : `this.Owner.Camera.Size`");
+     
+       //Sets the camera's transform to the midpoint of the two players
+       this.Owner.Transform.Translation = Real3(this.MidPointX, this.MidPointY, this.ZDistance);
+    }
+}

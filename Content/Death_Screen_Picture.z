@@ -1,0 +1,60 @@
+class Death_Screen_Picture : ZilchComponent
+{
+    
+    [Property]
+    var Picture : SpriteSource = null;
+    
+    
+    var Stats : Cog = null;
+    var Stats2: Cog = null;
+    var P1 : Cog = null;
+    var P2: Cog = null;
+
+
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.P2 = this.Space.FindObjectByName("P2_Avatar");
+        this.P1 = this.Space.FindObjectByName("P1_Avatar");
+        this.Stats2 = this.Space.FindObjectByName("P2Stats");
+        this.Stats = this.Space.FindObjectByName("P1Stats");
+        this.Owner.Sprite.AnimationSpeed = 0.8;
+        
+        Console.WriteLine("P1: `this.Stats.P1STATS.Dead`");
+        Console.WriteLine("P2: `this.Stats2.P2STATS.Dead`");
+        
+        
+        if(this.Owner.Name == "P1_Avatar")
+        {
+            if(this.Stats.P1STATS.Dead == 1)
+            {
+                this.Picture = this.Stats.P1STATS.PlayerStand;
+            }
+            else if(this.Stats.P1STATS.Dead == 0)
+            {
+                this.Picture = this.Stats.P1STATS.PlayerAttack;
+            }
+        }
+        
+        
+        if(this.Owner.Name == "P2_Avatar")
+        {
+            if(this.Stats2.P2STATS.Dead == 1)
+            {
+                this.Picture = this.Stats2.P2STATS.PlayerStand;
+            }
+            else if(this.Stats2.P2STATS.Dead == 0)
+            {
+                this.Picture = this.Stats2.P2STATS.PlayerAttack;
+            }
+        }
+        
+        this.Owner.Sprite.SpriteSource = this.Picture;
+    }
+    
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+
+    }
+}

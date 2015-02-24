@@ -1,0 +1,98 @@
+/*************************************************************************************************
+Author: Jonathan Owens
+
+Name: RayCasting
+
+Description: Using ray casting to determine if they players are facing each other and are a 
+             certain distance from eachother.
+
+Date: 1/9/15
+*************************************************************************************************/
+
+class RayCasting : ZilchComponent
+{
+    var Offset1 : Real3 = Real3(0.5, 0.0, 0.0); //Used to offset the direction of rays to account for diagonals
+    var Offset2 : Real3 = Real3(0.4, 0.0, 0.0); //Same as above
+    
+    var Distance1 : Real = 0; //Distance for each individual ray
+    var Distance2 : Real = 0;
+    var Distance3 : Real = 0;
+    
+    var P1 : Cog = null;
+    var P2 : Cog = null;
+    
+    var NoHit : Real = 1000;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+        this.P1 = this.Space.FindObjectByName("Player1");
+        this.P2 = this.Space.FindObjectByName("Player2");
+    }
+
+
+    //Debugging by drawing the rays
+    function DrawArrow(ray : Ray, distance : Real)
+    {
+        var end = ray.Start + ray.Direction * distance;
+
+        var line = new DebugLine();
+       line.Start(ray.Start).End(end).HeadSize(0.25).Float4Color(Real4(1,0,0,1)).OnTop(true);
+        line.Draw();
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+      var ray1 = Ray(); //Assigning rays to variables
+      var ray2 = Ray();
+      var ray3 = Ray();
+      
+      var myFilter = CastFilter();
+      
+      myFilter.CollisionGroup = CollisionGroup.Find("Rays");
+      
+      ray1.Start = this.Owner.Transform.WorldTranslation; //Set the starting point for each of the rays
+      ray2.Start = this.Owner.Transform.WorldTranslation;
+      ray3.Start = this.Owner.Transform.WorldTranslation;
+      
+      ray1.Direction = this.Owner.Orientation.WorldForward + this.Offset1; //setting the offset of the rays
+      ray2.Direction = this.Owner.Orientation.WorldForward - this.Offset2;
+      ray3.Direction = this.Owner.Orientation.WorldForward;
+      
+      ray1.Direction = Math.Normalize(ray1.Direction); //normalizing the vectors
+      ray2.Direction = Math.Normalize(ray2.Direction);
+      ray3.Direction = Math.Normalize(ray3.Direction);
+      
+      var result1 = this.Space.PhysicsSpace.CastRayFirstFiltered(ray1, myFilter); //storing the results for all the ray information
+      var result2 = this.Space.PhysicsSpace.CastRayFirstFiltered(ray2, myFilter); 
+      var result3 = this.Space.PhysicsSpace.CastRayFirstFiltered(ray3, myFilter);
+      
+      if ((result1.ObjectHit == this.P1 || result1.ObjectHit == this.P2) ||
+          (result2.ObjectHit == this.P1 || result2.ObjectHit == this.P2) ||
+          (result3.ObjectHit == this.P1 || result3.ObjectHit == this.P2))
+        {
+            this.Distance1 = result1.Distance; //the result of the distance from the ray
+            this.Distance2 = result2.Distance;
+            this.Distance3 = result3.Distance;
+        }
+        else
+        {
+            this.Distance1 = this.NoHit; //the result of the distance from the ray
+            this.Distance2 = this.NoHit;
+            this.Distance3 = this.NoHit;
+        }
+      
+      
+      Console.WriteLine("ray 1: `this.Distance1`"); //debugging
+      Console.WriteLine("ray 2: `this.Distance2`");
+      Console.WriteLine("ray 3: `this.Distance3`");
+      
+      this.DrawArrow(ray1, this.Distance1); //debugging
+      this.DrawArrow(ray2, this.Distance2);
+     this.DrawArrow(ray3, this.Distance3);
+      
+    }
+}
+    
+

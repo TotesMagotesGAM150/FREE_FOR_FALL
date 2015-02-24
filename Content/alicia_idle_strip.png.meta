@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "alicia_idle_strip",
+		uint64 ResourceId = 54dd4b8a362c0493,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 73,
+		uint FrameSizeY = 70,
+		uint FrameCount = 4,
+		float FrameDelay = 0.2,
+		float OriginX = 36,
+		float OriginY = 35,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

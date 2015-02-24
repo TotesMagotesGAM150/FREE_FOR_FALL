@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "Transition",
+		uint64 ResourceId = 54abb2dff8411f10,
+	},
+},

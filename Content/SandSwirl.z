@@ -1,0 +1,51 @@
+class SandSwirl : ZilchComponent
+{
+    var Player1 : Cog = null;
+    var Player2 : Cog = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        Zero.Connect(this.Owner, Events.CollisionEnded, this.OnCollisionEnded);
+        
+        this.Player1 = this.Space.FindObjectByName("Player1");
+        this.Player2 = this.Space.FindObjectByName("Player2");
+    }
+
+    function OnCollisionStarted (event: CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        
+        if (otherObject.Name == "Player1")
+        {
+            this.Player1.PlayerMovement.Speed = this.Player1.PlayerMovement.Speed / 2;
+        }
+        
+        if (otherObject.Name == "Player2")
+        {
+            this.Player2.Player2Movement.Speed = this.Player2.Player2Movement.Speed / 2;
+        }
+    }
+    
+    function OnCollisionEnded (event: CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        
+        if (otherObject.Name == "Player1")
+        {
+            this.Player1.PlayerMovement.Speed = this.Player1.PlayerMovement.Speed * 2;
+        }
+        
+        if (otherObject.Name == "Player2")
+        {
+            this.Player2.Player2Movement.Speed = this.Player2.Player2Movement.Speed * 2;
+        }
+    }
+    
+    function OnLogicUpdate(event: UpdateEvent)
+    {
+        Console.WriteLine("Player1 speed: `this.Player1.PlayerMovement.Speed`");
+        Console.WriteLine("Player2 speed: `this.Player2.Player2Movement.Speed`");
+    }
+}

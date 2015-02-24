@@ -1,0 +1,48 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: CharacterPickerCPU.z 
+
+Description: Sends out events to IsSelected to tell which character is being selected. 
+
+Date: 12/11/14
+*************************************************************************************************/
+class CharacterSelectedEvent3 : Event
+{
+    var Selection : Integer = Integer();
+    
+    constructor(selection : Integer) : base() 
+    {
+        this.Selection = selection;
+    }
+}
+
+class CharacterPickerCpu : ZilchComponent
+{
+   // This variable keeps track of what we are selecting //
+   [Property]
+   var Selection : Integer = 0;
+   
+   var RandomGenerator : Random = Random();
+   // is this character selected
+   var CharacterSelected2 : Boolean = false;
+   
+   
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);    
+        this.RandomGenerator = Random();
+        this.Selection = this.RandomGenerator.DieRoll(4);
+        Console.WriteLine(this.Selection);
+    }
+        
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.CharacterSelected2 == false)
+        {
+            this.Space.DispatchEvent("CharacterSelectedEvent3", new CharacterSelectedEvent3(this.Selection));
+            this.CharacterSelected2 = true; 
+        }
+    }
+}

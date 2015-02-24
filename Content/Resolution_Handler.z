@@ -1,0 +1,16 @@
+class Resolution_Handler : ZilchComponent
+{
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        var fullscreen : Boolean = true;
+        var resolution : Real2   = Real2(1280, 720);
+
+        this.GameSession.ChangeResolution(fullscreen, resolution);
+        this.Owner.Persistent = true; 
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

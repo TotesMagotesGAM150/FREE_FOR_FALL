@@ -1,0 +1,263 @@
+/*************************************************************************************************
+Author: Sean Boerger
+
+Name: PowerupActiveHandler
+
+Description: Handles the use of the powerups on each player character
+
+Date: 1/28/15
+*************************************************************************************************/
+class PowerupActiveHandler : ZilchComponent
+{
+    var TinyActive : Boolean = false;
+    var BigActive : Boolean = false;
+    var ShieldActive : Boolean = false;
+    var ConfusionActive : Boolean = false;
+    var FireRingActive : Boolean = false;
+    var ProjectileActive : Boolean = false;
+    
+    var Distance1 : Real = 0;
+    
+    [Property]
+    var TinyStrengthDec : Integer = 2;
+    [Property]
+    var TinyDefenseDec : Integer = 2;
+    [Property]
+    var TinySpeedInc : Real = 0.04;
+    
+    [Property]
+    var BigStrengthInc : Integer = 2;
+    [Property]
+    var BigDefenseInc : Integer = 2;
+    [Property]
+    var BigSpeedDec : Real = 0.02;
+    
+    
+    [Property]
+    var TimerValue : Real = 50;
+    var Timer : Real = 0;
+    
+    var Ammo : Integer = 0;
+    
+    [Property]
+    var ROFTimerValue : Real = 5;
+    var ROFTimer : Real = 0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        //Console.WriteLine("Timer : `this.Timer`");
+        
+        if (this.Timer > 0)
+        {
+            this.Timer -= 0.1;
+            
+            if (this.ROFTimer <= 0 && this.ProjectileActive == true)
+            {
+                if (this.Owner.Name == "Player1")
+                {
+                    var projectileObject = this.Space.CreateAtPosition(Archetype.Find("P1Projectile"), this.Owner.Transform.Translation);
+                }
+                if (this.Owner.Name == "Player2")
+                {
+                    var projectileObject = this.Space.CreateAtPosition(Archetype.Find("P2Projectile"), this.Owner.Transform.Translation);
+                }
+                
+                this.ROFTimer += this.ROFTimerValue;
+            }
+            else
+            {
+                this.ROFTimer -= 0.1;
+            }
+        }
+        
+        if (this.ROFTimer < 0)
+        {
+            this.ROFTimer = 0;
+        }
+        
+        if(this.Timer <= 0)
+        {
+            this.DeactivateAll();
+        }
+        
+        if(this.Timer < 0)
+        {
+            this.Timer = 0;
+        }
+        
+    }
+    
+    function ActivateTiny()
+    {
+        this.DeactivateAll();
+        
+        this.TinyActive = true;
+        
+        this.Owner.Transform.Scale = Real3(1, 1, 1);
+        
+        if (this.Owner.Name == "Player1")
+        {
+            this.Owner.PlayerMovement.Speed += this.TinySpeedInc;
+            this.Owner.PlayerMovement.Defense -= this.TinyDefenseDec;
+            this.Owner.PlayerMovement.Strength -= this.TinyStrengthDec;
+        }
+        else if (this.Owner.Name == "Player2")
+        {
+            this.Owner.Player2Movement.Speed += this.TinySpeedInc;
+            this.Owner.Player2Movement.Defense -= this.TinyDefenseDec;
+            this.Owner.Player2Movement.Strength -= this.TinyStrengthDec;
+        }
+        
+        this.Timer = this.TimerValue;
+    }
+    
+    function ActivateBig()
+    {
+        this.DeactivateAll();
+        
+        this.BigActive = true;
+        
+        this.Owner.Transform.Scale = Real3(3, 3, 1);
+        
+        if (this.Owner.Name == "Player1")
+        {
+            this.Owner.PlayerMovement.Strength += this.BigStrengthInc;
+            this.Owner.PlayerMovement.Defense += this.BigDefenseInc;
+            this.Owner.PlayerMovement.Speed -= this.BigSpeedDec;
+        }
+        else if (this.Owner.Name == "Player2")
+        {
+            this.Owner.Player2Movement.Strength += this.BigStrengthInc;
+            this.Owner.Player2Movement.Defense += this.BigDefenseInc;
+            this.Owner.Player2Movement.Speed -= this.BigSpeedDec;
+        }
+        
+        this.Timer = this.TimerValue;
+    }
+    
+    function ActivateShield()
+    {
+        this.DeactivateAll();
+        
+        this.ShieldActive = true;
+        
+        this.Owner.FindChildByName("Shield").Sprite.Visible = true;
+        
+        this.Owner.BoxCollider.CollisionGroup = CollisionGroup.Find("ShieldedPlayers");
+        
+        this.Timer = this.TimerValue;
+    }
+    
+    function ActivateConfusion()
+    {
+        this.DeactivateAll();
+        
+        this.ConfusionActive = true;
+        
+        this.Timer = this.TimerValue;
+    }
+    
+    function ActivateFireRing()
+    {
+        this.DeactivateAll();
+        
+        this.FireRingActive = true;
+        
+        if (this.Owner.Name == "Player1")
+        {
+            this.Owner.FindChildByName("Fire").SphericalParticleEmitter.Active = true;
+        }
+        else if (this.Owner.Name == "Player2")
+        {
+            this.Owner.FindChildByName("Fire2").SphericalParticleEmitter.Active = true;
+        }
+        
+        this.Timer = this.TimerValue;
+    }
+    
+    function ActivateProjectile()
+    {
+        this.DeactivateAll();
+        
+        this.ProjectileActive = true;
+        
+        this.Timer = this.TimerValue; 
+    }
+    
+    function DeactivateAll()
+    {
+        this.Timer = 0;
+        
+        this.ShieldActive = false;
+        this.FireRingActive = false;
+        
+        this.ProjectileActive = false;
+        this.Ammo = 0;
+        
+        this.ConfusionActive = false;
+        
+        /* Shield Deactivation */
+        this.Owner.FindChildByName("Shield").Sprite.Visible = false;
+        
+        
+        
+        /* Tiny and Big Deactivation */
+        if (this.Owner.DeathHandle.DeathCollision == false)
+        {
+            this.Owner.Transform.Scale = Real3(2, 2, 1);
+        }
+        
+        if (this.TinyActive == true)
+        {
+            this.TinyActive = false;
+            
+            if (this.Owner.Name == "Player1")
+            {
+                this.Owner.PlayerMovement.Speed -= this.TinySpeedInc;
+                this.Owner.PlayerMovement.Defense += this.TinyDefenseDec;
+                this.Owner.PlayerMovement.Strength += this.TinyStrengthDec;
+            }
+            else if (this.Owner.Name == "Player2")
+            {
+                this.Owner.Player2Movement.Speed -= this.TinySpeedInc;
+                this.Owner.Player2Movement.Defense += this.TinyDefenseDec;
+                this.Owner.Player2Movement.Strength += this.TinyStrengthDec;
+            }
+        }
+        
+        if (this.BigActive == true)
+        {
+            this.BigActive = false;
+            
+            if (this.Owner.Name == "Player1")
+            {
+                this.Owner.PlayerMovement.Strength -= this.BigStrengthInc;
+                this.Owner.PlayerMovement.Defense -= this.BigDefenseInc;
+                this.Owner.PlayerMovement.Speed += this.BigSpeedDec;
+            }
+            else if (this.Owner.Name == "Player2")
+            {
+                this.Owner.Player2Movement.Strength -= this.BigStrengthInc;
+                this.Owner.Player2Movement.Defense -= this.BigDefenseInc;
+                this.Owner.Player2Movement.Speed += this.BigSpeedDec;
+            }
+        }
+        
+        if (this.Owner.Name == "Player1")
+        {
+            this.Owner.BoxCollider.CollisionGroup = CollisionGroup.Find("Player1");
+            this.Owner.FindChildByName("Fire").SphericalParticleEmitter.Active = false;
+        }
+        else if (this.Owner.Name == "Player2")
+        {
+            this.Owner.BoxCollider.CollisionGroup = CollisionGroup.Find("Player2");
+            this.Owner.FindChildByName("Fire2").SphericalParticleEmitter.Active = false;
+        }
+    }
+    
+}

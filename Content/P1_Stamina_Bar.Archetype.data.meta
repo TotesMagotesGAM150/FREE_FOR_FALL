@@ -1,0 +1,18 @@
+DataContent = 
+{
+	DataBuilder = 
+	{
+		string Name = "P1_Stamina_Bar",
+		uint64 ResourceId = 54dcf9535e5282f4,
+		string LoaderType = "Cog",
+		uint Version = 0,
+		bool ShowInEditor = true,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"StaminaAndPortraitTake1",
+		],
+	},
+},

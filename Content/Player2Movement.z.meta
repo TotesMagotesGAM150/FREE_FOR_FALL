@@ -1,0 +1,16 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "Player2Movement",
+		uint64 ResourceId = 54b390ab7aedb299,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"PowerupsBatch2",
+			"ControllerSupportedScripts",
+		],
+	},
+},

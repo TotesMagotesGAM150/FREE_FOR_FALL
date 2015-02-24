@@ -1,0 +1,51 @@
+/*************************************************************************************************
+Author: Alexander Townsend
+
+Name: Timer
+
+Description: Allows objects to use a timer.
+
+Date: Created 1/30/15
+*************************************************************************************************/
+
+class TimeUp : Event
+{
+}
+
+class Timer : ZilchComponent
+{
+    var Time : Real = 0.0;
+    var TargetTime : Real = 0.0;
+    var On : Boolean = false;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    //Start Timer which will run for targetTime
+    //Will not start if Timer is currently running
+    function StartTimer(targetTime : Real)
+    {
+        if (!this.On)
+        {
+            this.TargetTime = targetTime;
+            this.On = true;
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if (this.On)
+        {
+            this.Time += event.Dt;
+            
+            if (this.Time >= this.TargetTime)
+            {
+                this.Owner.DispatchEvent("TimeUp", new TimeUp());
+                this.Time = 0.0;
+                this.On = false;
+            }
+        }
+    }
+}

@@ -1,0 +1,110 @@
+class CheatHandler : ZilchComponent
+{
+    var CheatsActive : Boolean = false;
+    
+    var P1 : Cog = null;
+    var P2 : Cog = null;
+
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+        this.P1 = this.Space.FindObjectByName("Player1");
+        this.P2 = this.Space.FindObjectByName("Player2");
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if (Zero.Keyboard.KeyIsDown(Keys.Shift) && Zero.Keyboard.KeyIsDown(Keys.O) 
+            && Zero.Keyboard.KeyIsPressed(Keys.P))
+        {
+            if (this.CheatsActive == false)
+            {
+                this.CheatsActive = true;
+            }
+            else
+            {
+                this.CheatsActive = false;
+            }
+        }
+        
+        if (this.CheatsActive == true)
+        {
+            if (Zero.Keyboard.KeyIsPressed(Keys.One))
+            {
+                this.P1.PowerupActiveHandler.DeactivateAll();
+                this.P1.PowerupActiveHandler.ActivateBig();
+            }
+            
+            if (Zero.Keyboard.KeyIsPressed(Keys.Two))
+            {
+                this.P1.PowerupActiveHandler.DeactivateAll();
+                this.P1.PowerupActiveHandler.ActivateTiny();
+            }
+            
+            //if (Zero.Keyboard.KeyIsPressed(Keys.Three))
+            //{
+            //    this.P1.PowerupActiveHandler.DeactivateAll();
+            //    this.P1.PowerupActiveHandler.ActivateConfusion;
+            //}
+            
+            if (Zero.Keyboard.KeyIsPressed(Keys.Four))
+            {
+                this.P1.PowerupActiveHandler.DeactivateAll();
+                this.P1.PowerupActiveHandler.ActivateFireRing();
+            }
+            
+            if (Zero.Keyboard.KeyIsPressed(Keys.Three))
+            {
+                this.P1.PowerupActiveHandler.DeactivateAll();
+                this.P1.PowerupActiveHandler.ActivateShield();
+            }
+            
+            //if (Zero.Keyboard.KeyIsPressed(Keys.Six))
+            //{
+            //    this.P1.PowerupActiveHandler.DeactivateAll();
+            //    this.P1.PowerupActiveHandler.ActivateProjectile();
+            //}
+            
+            //For Player Two
+            if (this.P2.Player2Movement != null)
+            {
+                if (Zero.Keyboard.KeyIsPressed(Keys.NumPad1))
+                {
+                    this.P2.PowerupActiveHandler.DeactivateAll();
+                    this.P2.PowerupActiveHandler.ActivateBig();
+                }
+                
+                if (Zero.Keyboard.KeyIsPressed(Keys.NumPad2))
+                {
+                    this.P2.PowerupActiveHandler.DeactivateAll();
+                    this.P2.PowerupActiveHandler.ActivateTiny();
+                }
+                
+                //if (Zero.Keyboard.KeyIsPressed(Keys.NumPad3))
+                //{
+                //    this.P2.PowerupActiveHandler.DeactivateAll();
+                //    this.P2.PowerupActiveHandler.ActivateConfusion;
+                //}
+                
+                if (Zero.Keyboard.KeyIsPressed(Keys.NumPad4))
+                {
+                    this.P2.PowerupActiveHandler.DeactivateAll();
+                    this.P2.PowerupActiveHandler.ActivateFireRing();
+                }
+                
+                if (Zero.Keyboard.KeyIsPressed(Keys.NumPad3))
+                {
+                    this.P2.PowerupActiveHandler.DeactivateAll();
+                    this.P2.PowerupActiveHandler.ActivateShield();
+                }
+                
+                //if (Zero.Keyboard.KeyIsPressed(Keys.NumPad6))
+                //{
+                //    this.P2.PowerupActiveHandler.DeactivateAll();
+                //    this.P2.PowerupActiveHandler.ActivateProjectile();
+                //}
+            }
+        }
+    }
+}

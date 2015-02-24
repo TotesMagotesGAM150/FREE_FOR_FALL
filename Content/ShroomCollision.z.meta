@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "ShroomCollision",
+		uint64 ResourceId = 54b00d82691a3399,
+	},
+},

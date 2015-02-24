@@ -1,0 +1,103 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: PlayerAnimations.z
+
+Description: Sets the players animation state to either Idle, Attacking, or walking 
+
+Date: 12/8/2014
+*************************************************************************************************/
+class Player2Animations : ZilchComponent
+{
+    /* Idle */
+    [Property]
+    var PlayerStand : SpriteSource = null;
+    /* Walking */
+    [Property]
+    var PlayerWalk : SpriteSource = null;
+    /* Attacking */
+    [Property]
+    var PlayerAttack : SpriteSource = null; 
+    var Attack : Boolean = false; 
+    //  var Gamepad : Gamepad = null;
+    
+//    var Up : String = null;
+    
+    var Player1 : Cog = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Player1 = this.Space.FindObjectByName("Player1");
+        //this.Up = Zero.Keyboard.GetKeyName(Keys.Up);
+
+    //    this.Gamepad = Zero.Gamepads.GetGamePad(0);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        var isWalking = this.Owner.Player2Movement.IsWalking;
+        
+        if(Zero.Keyboard.KeyIsDown(Keys.Up) && Zero.Keyboard.KeyIsDown(Keys.Down))
+        {
+            if(this.Owner.Sprite.SpriteSource != this.PlayerStand)
+            {
+                this.Owner.Sprite.SpriteSource = this.PlayerStand;
+            }
+        }
+        // Need to force Idle is walk is true while getting hit
+        if(this.Player1.Knockback.Hit == true && this.Owner.Sprite.SpriteSource == this.PlayerWalk)
+        {
+            if(this.Owner.Sprite.SpriteSource != this.PlayerStand)
+            {
+                this.Owner.Sprite.SpriteSource = this.PlayerStand;
+            }
+        }
+        
+        if(this.Player1.Knockback.Hit == false)
+        {
+        /* When we are not attacking perform idle and basic movement */
+        if(this.Attack == false)
+        {
+            /* If we arent pressing any movement keys set animation to Idle */
+            if(!isWalking)
+            {
+                if(this.Owner.Sprite.SpriteSource != this.PlayerStand)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerStand;
+                }
+            }
+        
+            /* if you move either up or down change state to walking */
+            if(isWalking)
+            {
+                if(this.Owner.Sprite.SpriteSource != this.PlayerWalk && this.Space.LevelSettings.HUDController.P2_Stunned == false)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerWalk;
+                }
+            }
+        }
+        
+        /* if press is spaced set attack to true */
+        if(Zero.Keyboard.KeyIsPressed(Keys.NumPad0) || this.Owner.Player2Movement.Controller.IsButtonPressed(Buttons.A) && this.Space.LevelSettings.HUDController.P2_Stunned == false)
+        {
+            this.Space.SoundSpace.PlayCue(SoundCue.Find("Attack"));
+            this.Attack = true; 
+        }
+        
+        /* if attack is true set the animation to attacking */
+        if(this.Attack == true)
+        {
+            if(this.Owner.Sprite.SpriteSource != this.PlayerAttack)
+            {
+                this.Owner.Sprite.SpriteSource = this.PlayerAttack;
+            }
+            /* when we hit the last frame of the animation set attack to false */
+            if(this.Owner.Sprite.CurrentFrame == 3)
+            {
+                this.Attack = false;
+            }
+        }
+    }
+}
+}

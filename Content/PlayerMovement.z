@@ -1,0 +1,132 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: PlayerMovement.z
+
+Description: Handles the movement and rotation for Player 1
+
+Date: 12/8/2014
+*************************************************************************************************/
+class PlayerMovement : ZilchComponent
+{
+    var Health : Integer = 0;
+    var Strength : Integer = 0;
+    var Defense : Integer = 0; 
+    var Speed : Real = 0.0;
+    var RotationAngle : Real = 6.0;
+    var IsWalking : Boolean = false;
+    var Player1 : Cog = null;
+    var Controller : Gamepad = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Player1 = this.Space.FindObjectByName("Player1"); 
+        this.Controller = Zero.Gamepads.GetGamePad(0);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+     {
+        var movement = local Real3(0.0, 0.0, 0.0); 
+        var rotationAngles = local Real3 (0.0, 0.0, 0.0);
+        var forwardDirection = this.Owner.Orientation.WorldForward;
+        var position = this.Owner.Transform.Translation;
+        
+        
+        if(this.Owner.PlayerNumber.PlayerNumber == 1)
+        {
+            if(this.Controller.IsActive)
+            {
+                if(this.Owner.PlayerAnimations.Attack == false && this.Player1.Knockback.Hit2 == false &&
+                   this.Space.LevelSettings.HUDController.P1_Stunned == false && this.Owner.DeathHandle.DeathCollision == false)
+                {
+                    if (this.Space.FindObjectByName("Player2").PowerupActiveHandler.ConfusionActive == false)
+                    {
+                        movement.X += this.Controller.LeftStick.X;
+                        movement.Y += this.Controller.LeftStick.Y;
+                    }
+                    
+                    else
+                    {
+                        movement.X -= this.Controller.LeftStick.X;
+                        movement.Y -= this.Controller.LeftStick.Y;
+                    }
+                }
+            }
+            else if(!this.Controller.IsActive)
+            {
+                if(this.Owner.PlayerAnimations.Attack == false && this.Player1.Knockback.Hit2 == false &&
+                   this.Space.LevelSettings.HUDController.P1_Stunned == false && this.Owner.DeathHandle.DeathCollision == false)
+                {
+                    if (this.Space.FindObjectByName("Player2").PowerupActiveHandler.ConfusionActive == true)
+                    {
+                        if (Zero.Keyboard.KeyIsDown(Keys.W))
+                        {
+                            movement -= forwardDirection;
+                        }
+                        
+                        if (Zero.Keyboard.KeyIsDown(Keys.S))
+                        {
+                            movement += forwardDirection;
+                        }
+                    
+                        if (Zero.Keyboard.KeyIsDown(Keys.A))
+                        {
+                            rotationAngles.Z = -Math.ToRadians(this.RotationAngle);
+                        }
+                        
+                        if (Zero.Keyboard.KeyIsDown(Keys.D))
+                        {
+                            rotationAngles.Z = Math.ToRadians(this.RotationAngle);
+                        }
+                    }
+                    else
+                    {
+                        if (Zero.Keyboard.KeyIsDown(Keys.W))
+                        {
+                            movement += forwardDirection;
+                        }
+                        if (Zero.Keyboard.KeyIsDown(Keys.S))
+                        {
+                            movement -= forwardDirection;
+                        }
+                    
+                        if (Zero.Keyboard.KeyIsDown(Keys.A))
+                        {
+                            rotationAngles.Z = Math.ToRadians(this.RotationAngle);
+                        }
+                        if (Zero.Keyboard.KeyIsDown(Keys.D))
+                        {
+                            rotationAngles.Z = -Math.ToRadians(this.RotationAngle);
+                        }
+                    }
+                }
+            }
+            
+            
+            if(movement != Real3(0,0,0) && this.Controller.IsActive)
+            {
+                this.Owner.Orientation.LookAtDirection(movement);
+            }
+            
+            if(movement != Real3(0,0,0))
+            {
+                this.IsWalking= true;
+            }
+            
+            if(movement == Real3(0,0,0))
+            {
+                this.IsWalking = false;
+            }
+            
+            //Console.WriteLine(this.IsWalking);
+          
+            this.Owner.Transform.RotateAnglesWorld(rotationAngles); //allows for rotation
+            this.Owner.Transform.Translation += movement * this.Speed; //allows for movement
+        }
+    }
+        
+}
+        
+
+ 

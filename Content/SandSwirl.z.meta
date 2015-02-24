@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "SandSwirl",
+		uint64 ResourceId = 54c099e3d220e68c,
+	},
+},

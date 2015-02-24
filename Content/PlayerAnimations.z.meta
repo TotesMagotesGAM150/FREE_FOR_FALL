@@ -1,0 +1,16 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "PlayerAnimations",
+		uint64 ResourceId = 5492df4e9820aae8,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"PowerupsBatch2",
+			"ControllerSupportedScripts",
+		],
+	},
+},

@@ -1,0 +1,75 @@
+class Cpu_test  : ZilchComponent
+{
+    [Property]
+    var TargetObject: CogPath = null; //Set to Player
+    var Dir: Real3 = Real3();         //The direction towards the player
+    var StopDistance: Real = 0.75;    //How close AI gets to the player before stopping
+    
+       //the attributes that correspond to each character 
+    [Property]
+    var Health : Integer = Integer();
+    [Property]
+    var Speed : Real = 0.0;
+    [Property]
+    var Defense : Integer = Integer();
+    [Property]
+    var Strength : Integer = Integer();
+    
+    /* Idle */
+    [Property]
+    var PlayerStand : SpriteSource = null;
+    /* Walking */
+    [Property]
+    var PlayerWalk : SpriteSource = null;
+    /* Attacking */
+    [Property]
+    var PlayerAttack : SpriteSource = null; 
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    //Function to see if AI is close enough to stop moving
+    function TooClose() : Boolean
+    {
+        if(Math.Length(this.Dir) > this.StopDistance)
+        {
+            this.Dir = Math.Normalize(this.Dir);
+            return false;
+        }
+        
+        this.Dir = Math.Normalize(this.Dir);
+        return true;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if (this.TargetObject.Cog != null)
+        {
+            var upVector = local Real3(0, 0, 1); //Used to rotate
+            
+            this.Dir = this.TargetObject.Cog.Transform.Translation - this.Owner.Transform.Translation;
+            
+            //Keep moving if AI is not too close
+            if (!this.TooClose())
+            {
+                this.Owner.Transform.Translation += this.Dir * event.Dt;
+                
+                if (this.Owner.Sprite.SpriteSource != this.PlayerWalk)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerWalk;
+                }
+            }
+            else
+            {
+                if (this.Owner.Sprite.SpriteSource != this.PlayerAttack)
+                {
+                    this.Owner.Sprite.SpriteSource = this.PlayerAttack;
+                }
+            }
+            
+            this.Owner.Orientation.LookAtDirectionWithUp(this.Dir, upVector); //Used to rotate
+        }
+    }
+}

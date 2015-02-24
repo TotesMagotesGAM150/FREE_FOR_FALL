@@ -1,0 +1,28 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: FinalizeCharSelectionCpu.z
+
+Description: Checks to see if both characters are selected and advances to the PlayArea 
+
+Date: 01/02/2015
+*************************************************************************************************/
+class FinalizeCharSelectionCpu : ZilchComponent
+{
+
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Space.LevelSettings.CharacterPicker.CharacterSelected == true && this.Space.LevelSettings.CharacterPickerCpu.CharacterSelected2 == true)
+        {
+            if(Zero.Keyboard.KeyIsPressed(Keys.Space))
+            {
+                this.Space.LoadLevel(Level.Find("PlayAreaCPU"));
+            }
+        }
+    }
+}

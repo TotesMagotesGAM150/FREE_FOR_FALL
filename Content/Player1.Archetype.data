@@ -1,0 +1,228 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "Player1",
+	},
+	Archetyped = 
+	{
+		string Name = "54933719e7ed85a0:Player1",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [-20.3637, 6.69642, 3],
+		Vec3 Scale = [2, 2, 1],
+		Quat Rotation = [0, 0, -0.906308, 0.422618],
+	},
+	Sprite = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = false,
+		bool CastShadows = false,
+		Vec4 Color = [1, 1, 1, 1],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "52ad5fa30d7fcd50:DefaultSpriteLayer",
+		string SpriteSource = "54abe39537b5bc4e:Grom_Idle_strip4",
+		bool RenderMask = false,
+		bool FlipX = false,
+		bool FlipY = true,
+		bool OnTop = false,
+		bool AnimationActive = true,
+		float AnimationSpeed = 1,
+		uint StartFrame = 0,
+	},
+	PlayerNumber = 
+	{
+		int PlayerNumber = 1,
+	},
+	PlayerMovement = 
+	{
+	},
+	Orientation = 
+	{
+		Vec3 GlobalUp = [0, 1, 0],
+		Vec3 UpVector = [0, 0, 1],
+		Vec3 ForwardVector = [0, 1, 0],
+		OrientationBases DefaultBases = ForwardYUpZ,
+	},
+	PlayerAnimations = 
+	{
+		string PlayerStand = "4e07948c35993095:DefaultSprite",
+		string PlayerWalk = "4e07948c35993095:DefaultSprite",
+		string PlayerAttack = "4e07948c35993095:DefaultSprite",
+	},
+	RigidBody = 
+	{
+		bool Static = false,
+		bool Asleep = false,
+		bool Kinematic = false,
+		bool RotationLocked = true,
+		bool Mode2D = true,
+		bool AllowSleep = true,
+		bool Inherit2DMode = true,
+		Vec3 Velocity = [0, 0, 0],
+		Vec3 AngularVelocity = [0, 0, 0],
+	},
+	BoxCollider = 
+	{
+		bool Ghost = false,
+		bool SendsMessages = true,
+		bool Seamless = true,
+		string MaterialName = "4de020863e872da8:DefaultPhysicsMaterial",
+		string SerializedGroupName = "54737c58d7a6d36b:Player1",
+		Vec3 Offset = [0, 0, 0],
+		Vec3 Size = [0.15, 0.15, 0.5],
+	},
+	RayCasting = 
+	{
+	},
+	Knockback = 
+	{
+	},
+	DeathHandle = 
+	{
+	},
+	PowerupActiveHandler = 
+	{
+		int TinyStrengthDec = 2,
+		int TinyDefenseDec = 2,
+		float TinySpeedInc = 0.04,
+		int BigStrengthInc = 2,
+		int BigDefenseInc = 2,
+		float BigSpeedDec = 0.02,
+		float TimerValue = 50,
+	},
+	FireRingCollisionHandler = 
+	{
+	},
+	Hierarchy = 
+	{
+		Cog = 
+		{
+			LinkId = 
+			{
+				uint Id = 2,
+			},
+			Named = 
+			{
+				string Name = "Shield",
+			},
+			Archetyped = 
+			{
+				string Name = "5472829420ca409c:Shield",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0.0032579, -0.060663, 1],
+				Vec3 Scale = [0.6, 0.6, 1],
+				Quat Rotation = [0, 0, 0.906308, 0.422618],
+			},
+			Sprite = 
+			{
+				bool Visible = false,
+				bool VisibilityCulling = true,
+				bool VisibilityEvents = false,
+				bool CastShadows = false,
+				Vec4 Color = [0, 0.22, 1, 0.25],
+				BlendMode BlendMode = Alpha,
+				SpriteGeometryMode GeometryMode = ZPlane,
+				string SpriteLayer = "52ad5fa30d7fcd50:DefaultSpriteLayer",
+				string SpriteSource = "5274db4c2e7c11f9:Circle",
+				bool RenderMask = false,
+				bool FlipX = false,
+				bool FlipY = false,
+				bool OnTop = false,
+				bool AnimationActive = true,
+				float AnimationSpeed = 1,
+				uint StartFrame = 0,
+			},
+		},
+		Cog = 
+		{
+			LinkId = 
+			{
+				uint Id = 3,
+			},
+			Named = 
+			{
+				string Name = "Fire",
+			},
+			Archetyped = 
+			{
+				string Name = "54729ccf91e0c463:Fire",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0.0268621, -0.0503407, 2],
+				Vec3 Scale = [0.494519, 0.504358, 1.88143],
+				Quat Rotation = [-0.147102, -0.147234, 0.889826, -0.406071],
+			},
+			SpriteParticleSystem = 
+			{
+				bool Visible = true,
+				bool VisibilityCulling = true,
+				bool VisibilityEvents = true,
+				bool CastShadows = false,
+				SystemChildMode ChildMode = Independent,
+				SystemSpace SystemSpace = WorldSpace,
+				uint DrawOrder = 0,
+				float WarmUpTime = 0,
+				ParticleGeometry GeometryMode = Billboarded,
+				ParticleRenderMode RenderMode = Additive,
+				ParticleSortMode SortMode = Youngest,
+				ParticleAnimation ParticleAnimation = Single,
+				string Texture = "54dc433b994e5597:bullet",
+				Vec4 Tint = [0.835, 0.42084, 0.187875, 1],
+				float VelocityScale = 2,
+				float LengthScale = 2,
+				float MaxParticleSize = 100,
+				Vec3 SystemSize = [2, 1, 1],
+			},
+			SphericalParticleEmitter = 
+			{
+				bool Active = false,
+				uint EmitCount = 0,
+				float EmitRate = 300,
+				float EmitVariance = 0,
+				float Size = 0.5,
+				float SizeVariance = 0.2,
+				float Lifetime = 0.5,
+				float LifetimeVariance = 0,
+				float Spin = 3,
+				float SpinVariance = 0,
+				bool RandomSpin = false,
+				float Fill = 0.9,
+				float EmitterVelocityPercent = 0,
+				Vec3 StartVelocity = [0, 0, 0],
+				Vec3 RandomVelocity = [0, 0, 0],
+				Vec3 TangentVelocity = [0, 0, 0],
+				Vec3 EmitterSize = [2.5, 2.5, 0],
+				bool FastMovingEmitter = true,
+			},
+			ParticleColorAnimator = 
+			{
+				Vec4 Color0 = [1, 1, 1, 0],
+				Vec4 Color1 = [1, 1, 1, 1],
+				Vec4 Color2 = [1, 1, 1, 1],
+				Vec4 Color3 = [1, 1, 1, 1],
+				Vec4 Color4 = [1, 1, 1, 0],
+			},
+			SphereCollider = 
+			{
+				bool Ghost = true,
+				bool SendsMessages = true,
+				bool Seamless = true,
+				string MaterialName = "4de020863e872da8:DefaultPhysicsMaterial",
+				string SerializedGroupName = "5473635923352b54:Player1Items",
+				Vec3 Offset = [0, 0, 0],
+				float Radius = 1.1,
+			},
+		},
+	},
+},

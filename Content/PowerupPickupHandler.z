@@ -1,0 +1,114 @@
+/*************************************************************************************************
+Author: Sean Boerger
+
+Name: PowerupPickupHandler
+
+Description: Handles the picking up and generation of powerups
+
+Date: 1/28/15
+*************************************************************************************************/
+class PowerupPickupHandler : ZilchComponent
+{
+    var ShouldRespawn : Boolean = false;
+    
+    [Property]
+    var IsSinglePlayer : Boolean = false;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        Zero.Connect(this.Owner, Events.LogicUpdate, this.OnCollisionStarted);
+    }
+    
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        
+        if ((otherObject.Name == "Player1" || otherObject.Name == "Player2")
+             && this.Owner.Sprite.Visible == true)
+        {
+            this.ShouldRespawn = true;
+            
+            this.GeneratePowerup(event);
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if (this.ShouldRespawn == true)
+        {
+            this.Owner.PowerupSpawnHandler.Collected(event);
+            
+            this.ShouldRespawn = false;
+        }
+    }
+    
+    function GeneratePowerup(event : CollisionEvent)
+    {
+        var otherObject = event.OtherObject;
+        otherObject.PowerupActiveHandler.DeactivateAll();
+        
+        if (this.IsSinglePlayer == false)
+        {
+            var randNumGen = new Random();
+            var powerSelect = randNumGen.DieRoll(6);
+            
+           otherObject.PowerupActiveHandler.ActivateShield();
+           
+           
+           if (powerSelect == 1)
+           {
+               otherObject.PowerupActiveHandler.ActivateTiny();
+           }
+           else if (powerSelect == 2)
+           {
+               otherObject.PowerupActiveHandler.ActivateBig();
+           }
+           else if (powerSelect == 3)
+           {
+               otherObject.PowerupActiveHandler.ActivateShield();
+           }
+           else if (powerSelect == 4)
+           {
+             otherObject.PowerupActiveHandler.ActivateConfusion();
+           }
+           else if (powerSelect == 5)
+           {
+               otherObject.PowerupActiveHandler.ActivateFireRing();
+           }
+           else if (powerSelect == 6)
+           {
+               otherObject.PowerupActiveHandler.ActivateProjectile();
+           }
+        }
+        else
+        {
+            var randNumGen = new Random();
+            var powerSelect = randNumGen.DieRoll(5);
+            
+           otherObject.PowerupActiveHandler.ActivateShield();
+           
+           if (powerSelect == 1)
+           {
+               otherObject.PowerupActiveHandler.ActivateTiny();
+           }
+           else if (powerSelect == 2)
+           {
+               otherObject.PowerupActiveHandler.ActivateBig();
+           }
+           else if (powerSelect == 3)
+           {
+               otherObject.PowerupActiveHandler.ActivateShield();
+           }
+           else if (powerSelect == 4)
+           {
+               otherObject.PowerupActiveHandler.ActivateFireRing();
+           }
+           else if (powerSelect == 5)
+           {
+             otherObject.PowerupActiveHandler.ActivateShield();
+           }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+/*************************************************************************************************
+Author: Sean Boerger
+
+Name: PowerupSpawnHandler
+
+Description: Handles the spawning and respawning of powerups
+
+Date: 1/28/15
+*************************************************************************************************/
+class PowerupSpawnHandler : ZilchComponent
+{
+    [Property]
+    var SpawnDelay : Real = 7.0;
+    var NextSpawn : Real = 0.0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if (this.Owner.Sprite.Visible == false)
+        {
+            if (event.TimePassed > this.NextSpawn)
+            {
+                this.Owner.Sprite.Visible = true;
+            }
+        }
+    }
+    
+    function Collected(event : UpdateEvent)
+    {
+        if (event.TimePassed > this.NextSpawn && this.Owner.Sprite.Visible == true)
+        {
+            this.Owner.Sprite.Visible = false;
+            
+            /* Update next hit timer */
+            this.NextSpawn = event.TimePassed + this.SpawnDelay;
+        }
+    }
+}

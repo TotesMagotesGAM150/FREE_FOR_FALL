@@ -1,0 +1,42 @@
+class TextAnimations : ZilchComponent
+{
+    var Grow : Boolean = false; 
+    var Text : Cog = null;
+    var Time : Real = 0.0; 
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Text = this.Space.FindObjectByName("FreeTitle");
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {        
+        if(this.Time == 0.0 && this.Time != 13.0)
+        {
+            this.Grow = true;
+        }
+        
+        if(this.Time == 13.0)
+        {
+            this.Grow = false;
+        }
+        
+        if(this.Grow == true)
+        {
+            this.Time += 0.5;
+            this.Text.Transform.Scale += Real3(0.002,0.002,0.0);
+        }
+           
+        if(this.Grow == false)
+        {
+            this.Time -= 0.5; 
+            this.Text.Transform.Scale -= Real3(0.002,0.002,0.0);
+        }
+        
+        
+     //   Console.WriteLine(this.Grow);
+        //Console.WriteLine(this.Grow);
+        
+    }
+}

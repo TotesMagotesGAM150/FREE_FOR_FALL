@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "Baul_text_test",
+		uint64 ResourceId = 54a9710b65d95322,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 216,
+		uint FrameSizeY = 144,
+		uint FrameCount = 1,
+		float FrameDelay = 0.0833333,
+		float OriginX = 108,
+		float OriginY = 72,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

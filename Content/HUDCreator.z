@@ -1,0 +1,38 @@
+/*************************************************************************************************
+Author: Sean Boerger
+
+Name: HUDCreator
+
+Description: Initializes the HUD elements
+
+Date: 1/13/15
+*************************************************************************************************/
+class HUDCreator : ZilchComponent
+{
+    [Property]
+    var HudLevel: Level = null; // Level that has our HUD in it
+    var HudSpace: Space = null;
+
+    function Initialize(init : CogInitializer)
+    {
+        // Create a new Space to load our HUD level into
+        this.HudSpace = this.GameSession.CreateNamedSpace("HudSpace", Archetype.Find("Space"));
+        // Load the HUD level set in the property
+        this.HudSpace.LoadLevel(this.HudLevel);
+        
+        // Connect to the two portait sprites
+        var p1_Portrait = this.Owner.HUDCreator.HudSpace.FindObjectByName("P1_Portrait");
+        var p2_Portrait = this.Owner.HUDCreator.HudSpace.FindObjectByName("P2_Portrait");
+        
+        // Change the portrait sprites the correct images
+        p1_Portrait.Sprite.SpriteSource = this.Space.FindObjectByName("P1Stats").P1STATS.PlayerPortrait; 
+        p2_Portrait.Sprite.SpriteSource = this.Space.FindObjectByName("P2Stats").P2STATS.PlayerPortrait;
+    }
+
+    function Destroyed()
+    {
+        // Make sure to clean up the extra Space we created
+        this.HudSpace.Destroy();
+    }
+
+}

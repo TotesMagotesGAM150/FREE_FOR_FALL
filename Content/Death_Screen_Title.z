@@ -1,0 +1,53 @@
+class Death_Screen_Title : ZilchComponent
+{
+    [Property]
+    var Win : SpriteSource = null;
+    [Property]
+    var Lose : SpriteSource = null;
+    
+        
+    var Stats : Cog = null;
+    var Stats2: Cog = null;
+    var P1 : Cog = null;
+    var P2: Cog = null;
+
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate); 
+        this.Stats = this.Space.FindObjectByName("P1Stats");
+        this.Stats2 = this.Space.FindObjectByName("P2Stats");
+        this.P1 = this.Space.FindObjectByName("P1_WinLose");
+        this.P2 = this.Space.FindObjectByName("P2_WinLose");
+    }
+
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Owner.Name == "P1_WinLose")
+        {
+            if(this.Stats.P1STATS.Dead == 1)
+            {
+                this.Owner.Sprite.SpriteSource = this.Lose;
+            }
+            else if(this.Stats.P1STATS.Dead == 0)
+            {
+                this.Owner.Sprite.SpriteSource = this.Win; 
+            }
+        }
+        
+        
+        if(this.Owner.Name == "P2_WinLose")
+        {
+            if(this.Stats2.P2STATS.Dead == 1)
+            {
+                this.Owner.Sprite.SpriteSource = this.Lose;
+            }
+            else if(this.Stats2.P2STATS.Dead == 0)
+            {
+                this.Owner.Sprite.SpriteSource = this.Win;
+            }
+        }
+        
+    }
+}

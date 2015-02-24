@@ -1,0 +1,133 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: CharacterPicker.z 
+
+Description: Sends out events to IsSelected to tell which character is being selected. 
+
+Date: 12/11/14
+*************************************************************************************************/
+class CharacterSelectedEvent2 : Event
+{
+    var Selection : Integer = Integer();
+    
+    constructor(selection : Integer) : base() 
+    {
+        this.Selection = selection;
+    }
+}
+
+class CharacterPicker2 : ZilchComponent
+{
+   // This variable keeps track of what we are selecting //
+   [Property]
+   var Selection : Integer = 0;
+   
+    var Controller : Gamepad = null;
+    var DpadDown : Boolean;
+    var DpadUp : Boolean;
+    var DpadLeft : Boolean;
+    var DpadRight : Boolean;
+    var BButton : Boolean;
+    var AButton : Boolean;
+   
+   // is this character selected
+   var CharacterSelected2 : Boolean = false;
+   
+   
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);    
+        this.Controller = Zero.Gamepads.GetGamePad(1);
+    }
+    
+    // For selecting a character press enter 
+    function SelectCharacter()
+    {
+        // press enter to select a character
+        if(Zero.Keyboard.KeyIsPressed(Keys.Enter) || (this.Controller.IsActive && this.AButton) && this.Space.LevelSettings.CharacterPicker2.Selection != 0) 
+        {
+            this.CharacterSelected2 = true;
+            this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Pick"));
+            if(this.Space.LevelSettings.CharacterPicker2.Selection == 1)
+            {
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Saul_Sound"));
+            }
+            if(this.Space.LevelSettings.CharacterPicker2.Selection == 2)
+            {
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Grom_Sound"));
+            }
+            if(this.Space.LevelSettings.CharacterPicker2.Selection == 3)
+            {
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Alice_Sound"));
+            }
+            if(this.Space.LevelSettings.CharacterPicker2.Selection == 4)
+            {
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Zax_Sound"));
+            }                                
+        
+        }
+    }
+    
+    // to de-select a character press Backspace 
+    function DeSelectCharacter()
+    {
+        // press backspace to re-select a character 
+        if(Zero.Keyboard.KeyIsPressed(Keys.Shift) || (this.Controller.IsActive && this.BButton))
+        {
+            this.CharacterSelected2 = false;
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.DpadDown = this.Controller.IsButtonPressed(Buttons.DpadDown);
+        this.DpadUp = this.Controller.IsButtonPressed(Buttons.DpadUp);
+        this.DpadLeft = this.Controller.IsButtonPressed(Buttons.DpadLeft);
+        this.DpadRight = this.Controller.IsButtonPressed(Buttons.DpadRight);
+        this.AButton = this.Controller.IsButtonPressed(Buttons.A);
+        this.BButton = this.Controller.IsButtonPressed(Buttons.B);
+        
+        if(this.CharacterSelected2 == false)
+        {
+            if(this.Selection != 0)
+            {
+                this.SelectCharacter();
+            }
+            //increment and decrement selection up and down 
+            if(Zero.Keyboard.KeyIsPressed(Keys.Down) && this.Selection < 3)
+            {
+                this.Selection += 2;
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Move_Menu"));
+                this.Space.DispatchEvent("CharacterSelectedEvent2", new CharacterSelectedEvent2(this.Selection));
+            }
+        
+            if(Zero.Keyboard.KeyIsPressed(Keys.Up)  && this.Selection >= 3)
+            {
+                this.Selection -= 2;
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Move_Menu"));
+                this.Space.DispatchEvent("CharacterSelectedEvent2", new CharacterSelectedEvent2(this.Selection));
+            }
+            // increment and decrement selection left and right //
+            if(Zero.Keyboard.KeyIsPressed(Keys.Right) && this.Selection <= 3)
+            {
+                this.Selection += 1;
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Move_Menu"));
+                this.Space.DispatchEvent("CharacterSelectedEvent2", new CharacterSelectedEvent2(this.Selection));
+            }
+        
+            if(Zero.Keyboard.KeyIsPressed(Keys.Left)  && this.Selection > 0)
+            {
+                this.Selection -= 1;
+                this.Space.SoundSpace.PlayCue(SoundCue.Find("Character_Move_Menu"));
+                this.Space.DispatchEvent("CharacterSelectedEvent2", new CharacterSelectedEvent2(this.Selection));
+            }
+        }
+        Console.WriteLine("Selection `this.Selection`");
+        //Able to reselect a character 
+        this.DeSelectCharacter();
+
+         
+    }
+    
+}

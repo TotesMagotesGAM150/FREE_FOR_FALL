@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "Grom_Walk_strip4",
+		uint64 ResourceId = 54abe58fc38db6b2,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 78,
+		uint FrameSizeY = 80,
+		uint FrameCount = 4,
+		float FrameDelay = 0.2,
+		float OriginX = 39,
+		float OriginY = 40,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

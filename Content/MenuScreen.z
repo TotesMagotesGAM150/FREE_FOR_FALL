@@ -1,0 +1,92 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: MenuScreen.z 
+
+Description: Handles the main menu input 
+
+Date: 01/10/2015
+*************************************************************************************************/
+class MenuScreen : ZilchComponent
+{
+    
+    //To see whats currently being selected
+    var Selected : Integer = 0; 
+    var Controller : Gamepad = null;
+    var DpadDown : Boolean;
+    var DpadUp : Boolean;
+    var AButton : Boolean;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Controller = Zero.Gamepads.GetGamePad(0);
+    }
+    
+    //To switch the selection
+    function SwitchSelection()
+    {   
+         if(this.Controller.IsActive)
+        {
+            if(this.DpadDown && this.Selected >= 0 && this.Selected < 3)
+            {
+                this.Selected += 1;
+            }   
+            if(this.DpadUp && this.Selected > 0 && this.Selected <= 3)
+            {
+                this.Selected -= 1;
+            }  
+        }
+         
+        else if(!this.Controller.IsActive)
+        {
+            if(Zero.Keyboard.KeyIsPressed(Keys.S) && this.Selected >= 0 && this.Selected < 3)
+            {
+                this.Selected += 1;
+            }   
+            if(Zero.Keyboard.KeyIsPressed(Keys.W) && this.Selected > 0 && this.Selected <= 3)
+            {
+                this.Selected -= 1;
+            }  
+        }
+    }
+    
+    function SwitchScreen()
+    {
+        if(this.Controller.IsActive)
+        {
+            if(this.AButton && this.Selected == 0)
+            {
+                 this.Space.LoadLevel(Level.Find("CharacterSelectCPU"));
+            }
+            
+            if(this.AButton && this.Selected == 1)
+            {
+                 this.Space.LoadLevel(Level.Find("CharacterSelect"));
+            }
+        }
+        
+        else if(!this.Controller.IsActive)
+        {
+            if(Zero.Keyboard.KeyIsPressed(Keys.Enter)  && this.Selected == 0)
+            {
+                 this.Space.LoadLevel(Level.Find("CharacterSelectCPU"));
+            }
+            
+            if(Zero.Keyboard.KeyIsPressed(Keys.Enter)  && this.Selected == 1)
+            {
+                 this.Space.LoadLevel(Level.Find("CharacterSelect"));
+            }
+        }
+    }
+        
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.DpadDown = this.Controller.IsButtonPressed(Buttons.DpadDown);
+        this.DpadUp = this.Controller.IsButtonPressed(Buttons.DpadUp);
+        this.AButton = this.Controller.IsButtonPressed(Buttons.A);
+        this.SwitchScreen();
+        this.SwitchSelection();
+        Console.WriteLine(this.Selected);
+    }
+}

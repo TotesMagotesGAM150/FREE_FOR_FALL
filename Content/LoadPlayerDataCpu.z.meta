@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "LoadPlayerDataCpu",
+		uint64 ResourceId = 54abb62d5db6a960,
+	},
+},

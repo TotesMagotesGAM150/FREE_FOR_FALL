@@ -1,0 +1,47 @@
+/*************************************************************************************************
+Author: Razmig Mardirossian 
+
+Name: Parralax.z
+
+Description: Controls the scrolling clouds in the gameplay screen 
+
+Date: 12/6/2014
+*************************************************************************************************/
+class Parrallax : ZilchComponent
+{
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // Get current position:
+        var position = this.Owner.Transform.Translation;
+        // Move upward
+        position.X -= event.Dt * 0.8;
+        this.Owner.Transform.Translation = position;
+    }
+        
+        
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        
+          // Get the object we collided with:
+          var otherObject = event.OtherObject;
+
+          // If we collided with the trigger,
+          if (otherObject.Name == "Trigger")
+          {
+            //store the current position of the clouds
+            var position = this.Owner.Transform.Translation;
+            // find the trigger down below and store its location
+            var newPosition = this.Space.FindAllObjectsByName("LeftTrans").Current.Transform.Translation;
+            //move to the left trans static object down below 
+            this.Owner.Transform.Translation = newPosition;
+          }
+        
+    }
+}

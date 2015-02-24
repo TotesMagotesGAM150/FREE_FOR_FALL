@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "CharacterPickerCpu",
+		uint64 ResourceId = 54a84a28aa05d9b6,
+	},
+},

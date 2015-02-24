@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "Cpu_test",
+		uint64 ResourceId = 54ad5042ca626f55,
+	},
+},

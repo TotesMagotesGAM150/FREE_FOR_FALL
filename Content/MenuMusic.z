@@ -1,0 +1,25 @@
+class MenuMusic : ZilchComponent
+{
+    var BackgroundMusicObject : Cog = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.BackgroundMusicObject = this.Space.FindObjectByName("BackgroundMusic");
+        
+        if(this.BackgroundMusicObject != null)
+        {
+            // Make it persist
+            this.BackgroundMusicObject.Persistent = true;
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Space.CurrentLevel == Level.Find("CharacterSelect") || this.Space.CurrentLevel == Level.Find("CharacterSelectCPU"))
+        {
+            this.BackgroundMusicObject.Persistent = false;
+        }
+        
+    }
+}
